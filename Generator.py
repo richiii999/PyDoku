@@ -93,5 +93,5 @@ def GenerateSudokuSet(numEmpty, RNG=None):
 
     RemoveDigits(grid, numEmpty) # Remove digits to create the puzzle
 
-    return [solution, grid]
+    return [grid, solution]
 
