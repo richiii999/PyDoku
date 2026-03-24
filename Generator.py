@@ -4,9 +4,8 @@
 # Adapted from: https://www.geeksforgeeks.org/dsa/program-sudoku-generator/
 
 
-import random
-import copy # Deepcopy solution before changing current (due to nested list)
-
+from random import seed, randint
+from copy import deepcopy  # Deepcopy solution before changing current (due to nested list)
 
 # Returns false if given 3x3 block contains num
 def NumInBox(grid, rowStart, colStart, num):
@@ -21,7 +20,7 @@ def FillBox(grid, row, col):
     for i in range(3):
         for j in range(3):
             while True:
-                num = random.randint(1, 9)
+                num = randint(1, 9)
                 if not NumInBox(grid, row, col, num): break
             grid[row + i][col + j] = num
 
@@ -65,7 +64,7 @@ def FillRemaining(grid, i, j):
 
 def RemoveDigits(grid, numEmpty): # Remove numEmpty digits randomly from grid
     while numEmpty > 0:
-        cellId = random.randint(0, 80)
+        cellId = randint(0, 80)
 
         # row / col idx
         i = cellId // 9
@@ -77,33 +76,31 @@ def RemoveDigits(grid, numEmpty): # Remove numEmpty digits randomly from grid
             numEmpty -= 1
 
 # Generate a Sudoku init/solution set with numEmpty 0's.
-def GenerateSudoku(numEmpty, seed=0):
+def GenerateSudokuSet(numEmpty, RNG=None):
     if numEmpty < 1 or numEmpty > 27:
         print("Invalid numEmpty tiles!")
         return
 
     # Seed the RNG
-    if (seed == 0): random.seed() # Default: Random seed
-    else: random.seed(seed)
+    seed(RNG)
 
     grid = [[0] * 9 for _ in range(9)] # Empty 9x9 grid
 
     FillDiagonal(grid) # Fill the diagonal 3x3 matrices first
     FillRemaining(grid, 0, 0) # Fill the remaining blocks in the grid
 
-    solution = copy.deepcopy(grid) # Save this solution for later use
+    solution = deepcopy(grid) # Save this solution for later use
 
     RemoveDigits(grid, numEmpty) # Remove digits to create the puzzle
 
     return [solution, grid]
-
 
 #
 # Testing
 #
 
 numEmpty = 20 # Set the number of empty cells
-sudoku = GenerateSudoku(numEmpty)
+sudoku = GenerateSudokuSet(numEmpty)
 
 for board in sudoku:
     print("\n")
