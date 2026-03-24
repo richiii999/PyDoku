@@ -76,15 +76,13 @@ def RemoveDigits(grid, numEmpty): # Remove numEmpty digits randomly from grid
             numEmpty -= 1
 
 # Generate a Sudoku init/solution set with numEmpty 0's.
-def GenerateSudokuSet(numEmpty, RNG=None):
-    if numEmpty < 1 or numEmpty > 27:
-        print("Invalid numEmpty tiles!")
-        return
+def GenerateSudokuSet(numEmpty=None, RNG=None):
+    if numEmpty == None or numEmpty < 1 or numEmpty > 80:
+        raise ValueError("Invalid numEmpty tiles!")
 
-    # Seed the RNG
     seed(RNG)
 
-    grid = [[0] * 9 for _ in range(9)] # Empty 9x9 grid
+    grid = [[0] * 9 for _ in range(9)] # Start with empty 9x9 grid
 
     FillDiagonal(grid) # Fill the diagonal 3x3 matrices first
     FillRemaining(grid, 0, 0) # Fill the remaining blocks in the grid
