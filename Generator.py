@@ -95,14 +95,3 @@ def GenerateSudokuSet(numEmpty, RNG=None):
 
     return [solution, grid]
 
-#
-# Testing
-#
-
-numEmpty = 20 # Set the number of empty cells
-sudoku = GenerateSudokuSet(numEmpty)
-
-for board in sudoku:
-    print("\n")
-    for row in board:
-        print(" ".join(map(str, row)))
