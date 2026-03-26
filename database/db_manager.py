@@ -1,10 +1,15 @@
-### welcom to the db manager
+### welcome to the db manager
+### allows to fetch and update the sql database
+
+## todo add the delete rows for all tables
+## add new column for the notes 3d matrix for the session
+
 import sqlalchemy as db
 engine = engine = db.create_engine('sqlite:///pydoku.db')
 
 class db_function:
 
-# GENERIC STUFF
+# converter functions
 
     def string_to_array(string_map):
         arr = [
@@ -37,7 +42,7 @@ class db_function:
 
         for i in range(9):
             for j in range(9):
-                new_string+= array_map[i][j]
+                new_string+= str(array_map[i][j])
 
         return new_string
 
@@ -90,10 +95,10 @@ class db_function:
         return result
 
     ########## MAP SOLUTIONS ARE HERE
-    def get_map_solution_and_id(id):
+    def get_solution_and_id(id):
         MAP = db.Table('MAP_SOLUTIONS', db.MetaData(), autoload_with=engine)
 
-        query = db.select(MAP.c.map_id,MAP.c.map).where(MAP.columns.map_id == id)
+        query = db.select(MAP.c.map_id,MAP.c.map_solution).where(MAP.columns.map_id == id)
 
         result = engine.connect().execute(query).fetchall()
 
@@ -133,7 +138,10 @@ class db_function:
         return result
 
 
-    ############# inser into  tables
+    ############# insert into  tables
+
+
+    #insert into map
     def add_new_map(map_string):
         MAP = db.Table('MAP', db.MetaData(), autoload_with=engine)
         conn = engine.connect()
@@ -145,7 +153,9 @@ class db_function:
         insert_query = MAP.insert().values(map_id=new_id,completed_howmanytimes=None,map=map_string )
         conn.execute(insert_query)
         conn.commit()
-        
+        return new_id
+    
+    #insert into the solution table
     def add_solution(id,solution_string):
         MAP = db.Table('MAP_SOLUTIONS', db.MetaData(), autoload_with=engine)
         conn = engine.connect()
@@ -154,6 +164,7 @@ class db_function:
         conn.execute(insert_query)
         conn.commit()
 
+    #add new session
     def add_session(id,sess_map,):
         MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
         conn = engine.connect()
@@ -169,6 +180,8 @@ class db_function:
 
 
     ############### update into tables
+
+    #update values in map
     def update_completed_howmanytimes(id):
         MAP = db.Table('MAP', db.MetaData(), autoload_with=engine)
         conn = engine.connect()
@@ -184,12 +197,14 @@ class db_function:
         conn.execute(query)
         conn.commit()
 
+    #update the session
     def save_session(sess_id, new_session_map, timestamp):
         MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
         conn = engine.connect()
 
+        ttimestamp = int(timestamp)
         
-        query = db.update(MAP).where(MAP.c.session_id == sess_id).values(time_spent = timestamp, session_map = new_session_map)
+        query = db.update(MAP).where(MAP.c.session_id == sess_id).values(time_spent = ttimestamp, session_map = new_session_map)
         conn.execute(query)
         conn.commit()
 
