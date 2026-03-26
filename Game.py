@@ -23,7 +23,7 @@ class SudokuGame:
         # Metadata
         self.meta = Gamedata.Gamedata(difficulty=difficulty)
 
-    def prettyPrint(self, grid=None, wall='|', floor='-', empty='.', info=False):
+    def prettyPrint(self, grid=None, wall='|', floor='-', empty='.', info=False) -> None:
         """Prints the full Sudoku board with formatting"""
         if grid is None: grid = self.curr
         
@@ -35,7 +35,7 @@ class SudokuGame:
         if info:
             print(f"Mistakes={self.meta.numMistakes}, Notes={self.meta.numNotes}\n")
 
-    def PlaceTile(self, row, col, val):
+    def PlaceTile(self, row, col, val) -> None:
         """Attempts to place val at [row][col]"""
         if row < 0 or row > 8: raise ValueError("Invalid row")
         if col < 0 or col > 8: raise ValueError("Invalid col")
@@ -52,7 +52,7 @@ class SudokuGame:
         if val != 0 and not self.solution[row][col] == val:
             self.meta.numMistakes += 1
 
-    def AddNote(self, row, col, val):
+    def AddNote(self, row, col, val) -> None:
         """Attempts to place val at [row][col]"""
         if row < 0 or row > 8: raise ValueError("Invalid row")
         if col < 0 or col > 8: raise ValueError("Invalid col")
@@ -70,6 +70,10 @@ class SudokuGame:
         else: 
             insort(self.notes[row][col], val) # Insert in-order
             self.meta.numNotes += 1
+
+    def CheckIfWin(self) -> bool:
+        """Returns T/F if board is solved"""
+        return self.curr == self.solution
     
 
 # TESTING
