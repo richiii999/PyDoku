@@ -44,8 +44,12 @@ class SudokuGame:
         print(f"Placing {val} @ {row},{col}")
 
         if self.initial[row][col] != 0:
-            print("Tile in initial state, ignoring placement")
+            print("Tile in initial state, ignoring tile")
             return
+
+        elif val == self.curr[row][col]:
+            print("Duplicate, removing tile")
+            self.curr[row][col] = 0
 
         self.curr[row][col] = val
 
@@ -84,18 +88,18 @@ g1.prettyPrint(g1.solution)
 print("Initial state")
 g1.prettyPrint(info=True)
 
-# print("TEST: This is a mistake")
-# g1.PlaceTile(0,0,7)
-# g1.prettyPrint(g1.curr, info=True)
-# 
-# print("TEST: This is invalid, its in the initial state")
-# g1.PlaceTile(8,0,7)
-# g1.prettyPrint(g1.curr, info=True)
+print("TEST: This is a mistake")
+g1.PlaceTile(0,0,7)
+g1.prettyPrint(g1.curr, info=True)
 
-# for row in range(9):
-#     for col in range(9):
-#         g1.PlaceTile(row,col,5)
-# g1.prettyPrint(g1.curr, info=True)
+print("TEST: This is invalid, its in the initial state")
+g1.PlaceTile(8,0,7)
+g1.prettyPrint(g1.curr, info=True)
+
+for row in range(9):
+    for col in range(9):
+        g1.PlaceTile(row,col,5)
+g1.prettyPrint(g1.curr, info=True)
 
 print("TEST: Noting 3 values, there should be 81 slots for notes total, only 1 has notes")
 g1.AddNote(0,1,3)
@@ -108,3 +112,8 @@ for i in g1.notes:
     for j in i:
             total += 1
 print(f"Slots={total}")
+
+print("TEST: Solving board")
+g1.curr = g1.solution
+g1.prettyPrint(info=True)
+print(f"Solved={g1.CheckIfWin()}")
