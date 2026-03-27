@@ -1,8 +1,8 @@
 ### welcome to the db manager
 ### allows to fetch and update the sql database
 
-## todo add the delete rows for all tables
-## add new column for the notes 3d matrix for the session
+
+## TODo:add new column for the notes 3d matrix for the session
 
 import sqlalchemy as db
 engine = engine = db.create_engine('sqlite:///pydoku.db')
@@ -138,11 +138,19 @@ class db_function:
         return result
 
 
-    ############# insert into  tables
+    ############# insert rows into  tables
 
+    
+    
+    def add_solution(id,solution_string):
+        MAP = db.Table('MAP_SOLUTIONS', db.MetaData(), autoload_with=engine)
+        conn = engine.connect()
+        
+        insert_query = MAP.insert().values(map_id=id,map_solution = solution_string)
+        conn.execute(insert_query)
+        conn.commit()
 
-    #insert into map
-    def add_new_map(map_string):
+    def add_new_map(map_string,solution_string):
         MAP = db.Table('MAP', db.MetaData(), autoload_with=engine)
         conn = engine.connect()
         
@@ -153,18 +161,11 @@ class db_function:
         insert_query = MAP.insert().values(map_id=new_id,completed_howmanytimes=None,map=map_string )
         conn.execute(insert_query)
         conn.commit()
+        db_function.add_solution(new_id,solution_string)
+
         return new_id
     
-    #insert into the solution table
-    def add_solution(id,solution_string):
-        MAP = db.Table('MAP_SOLUTIONS', db.MetaData(), autoload_with=engine)
-        conn = engine.connect()
-        
-        insert_query = MAP.insert().values(map_id=id,map_solution = solution_string)
-        conn.execute(insert_query)
-        conn.commit()
 
-    #add new session
     def add_session(id,sess_map,):
         MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
         conn = engine.connect()
@@ -177,7 +178,38 @@ class db_function:
         conn.execute(insert_query)
         conn.commit()
 
+    #delete rows in the table
+    def delete_map(id):
+        MAP = db.Table('MAP', db.MetaData(), autoload_with=engine)
+        conn = engine.connect()
+        
+        query = MAP.delete().where(MAP.c.map_id == id)
 
+        conn.execute(query)
+        conn.commit()
+        
+        db_function.delete_solution(id)
+       
+    
+    def delete_solution(id):
+        MAP = db.Table('MAP_SOLUTIONS', db.MetaData(), autoload_with=engine)
+        conn = engine.connect()
+        
+        query = MAP.delete().where(MAP.c.map_id == id)
+
+        conn.execute(query)
+        conn.commit()
+
+  
+    def delete_session(id):
+        MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
+        
+        conn = engine.connect()
+        
+        query = MAP.delete().where(MAP.c.session_id == id)
+
+        conn.execute(query)
+        conn.commit()
 
     ############### update into tables
 

@@ -14,15 +14,10 @@ sudokuSet = Generator.GenerateSudokuSet(numEmpty)
 new_map = db.array_to_string(sudokuSet[0])
 solution = db.array_to_string(sudokuSet[1])
 
-'''
-new_map_id = db.add_new_map(new_map) #returns back it's id
-db.add_solution(new_map_id,solution)
-'''
 
-mapfromdb = db.get_map_and_id(6)
-print(mapfromdb)
-solutionfromdb = db.get_solution_and_id(4)
-print(solutionfromdb)
+new_map_id = db.add_new_map(new_map,solution) #returns back it's id
+
+
 
 '''
 
