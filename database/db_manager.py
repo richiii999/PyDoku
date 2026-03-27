@@ -1,6 +1,9 @@
 ### welcome to the db manager
 ### allows to fetch and update the sql database
 
+## todo add the delete rows for all tables
+## add new column for the notes 3d matrix for the session
+
 import sqlalchemy as db
 engine = engine = db.create_engine('sqlite:///pydoku.db')
 
@@ -199,8 +202,9 @@ class db_function:
         MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
         conn = engine.connect()
 
+        ttimestamp = int(timestamp)
         
-        query = db.update(MAP).where(MAP.c.session_id == sess_id).values(time_spent = timestamp, session_map = new_session_map)
+        query = db.update(MAP).where(MAP.c.session_id == sess_id).values(time_spent = ttimestamp, session_map = new_session_map)
         conn.execute(query)
         conn.commit()
 
