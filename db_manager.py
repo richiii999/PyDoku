@@ -131,7 +131,7 @@ class db_function:
     def get_completion_time(id):
         MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
 
-        query = db.select(MAP.c.time_spent).where(MAP.columns.sesion_id == id)
+        query = db.select(MAP.c.time_spent).where(MAP.columns.session_id == id)
 
         result = engine.connect().execute(query).scalar()
 
@@ -140,7 +140,7 @@ class db_function:
     def get_completion_status(id):
         MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
 
-        query = db.select(MAP.c.completion_status).where(MAP.columns.sesion_id == id)
+        query = db.select(MAP.c.completion_status).where(MAP.columns.session_id == id)
 
         result = engine.connect().execute(query).scalar()
 
