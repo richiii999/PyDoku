@@ -7,7 +7,7 @@
 import sqlalchemy as db
 import json 
 
-engine = engine = db.create_engine('sqlite:///pydoku.db')
+engine = engine = db.create_engine('sqlite:///database/pydoku.db')
 
 class db_function:
 
@@ -278,7 +278,7 @@ class db_function:
         conn.execute(query)
         conn.commit()
 
-    def update_session_completion_status(ses_id):
+    def update_completion_status_true(ses_id):
         MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
         conn = engine.connect()
 
@@ -287,6 +287,14 @@ class db_function:
         conn.execute(query)
         conn.commit()
 
+    def update_completion_status_false(ses_id):
+        MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
+        conn = engine.connect()
+
+        
+        query = db.update(MAP).where(MAP.c.session_id == ses_id).values(completion_status = 0)
+        conn.execute(query)
+        conn.commit()
     '''
     update_completed_howmanytimes(1)
     get_completed_howmanytimes(1)

@@ -4,7 +4,7 @@
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
-from db_manager import db_function as db
+from database.db_manager import db_function as db
 
 # TODO
 # Connect to db and read the games
