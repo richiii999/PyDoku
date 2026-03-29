@@ -18,10 +18,3 @@ def GamesByTime():
     plt.title("Time per game")
     # x/y label already set from DB
     plt.show()
-
-
-
-
-
-# TESTING
-GamesByTime()
