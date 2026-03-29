@@ -7,7 +7,28 @@ from db_manager import db_function as db
 from sys import path
 path.append("..")
 
-import Generator
+
+
+matrix = [
+    [[1,2,3,4], [1,2,3,4], [1,2,3,4]],
+    [[1,2,3,4], [1,2,3,4], [1,2,3,4]],
+    [[1,2,3,4], [1,2,3,4], [1,2,3,4]]
+]
+
+print("afterwords")
+for row in matrix: print(" ".join(map(str, row)))
+
+
+db.update_notes(matrix)
+
+notes = db.get_notes(1)
+print("getback")
+for row in notes: print(" ".join(map(str, row)))
+
+'''
+matrix = db.convert_2d_to_3d(notes)
+for row in matrix: print(" ".join(map(str, row)))
+
 
 numEmpty = 20 # Set the number of empty cells
 sudokuSet = Generator.GenerateSudokuSet(numEmpty)
@@ -19,7 +40,7 @@ new_map_id = db.add_new_map(new_map,solution) #returns back it's id
 
 
 
-'''
+
 
 
 

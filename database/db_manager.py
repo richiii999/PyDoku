@@ -5,12 +5,21 @@
 ## TODo:add new column for the notes 3d matrix for the session
 
 import sqlalchemy as db
+import json 
+
 engine = engine = db.create_engine('sqlite:///pydoku.db')
 
 class db_function:
 
 # converter functions
-
+    def convert_3d_to_2d(matrix):
+        return [row for layer in matrix for row in layer]
+    
+    def convert_2d_to_3d(matrix_2d):
+        return [
+            matrix_2d[i:i + 9]
+            for i in range(0, len(matrix_2d), 9)
+        ]
     def string_to_array(string_map):
         arr = [
         [0,0,0,0,0,0,0,0,0],
@@ -136,7 +145,20 @@ class db_function:
         result = engine.connect().execute(query).scalar()
 
         return result
+    def get_notes(id):
+        MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
 
+        query = db.select(MAP.c.notes).where(MAP.c.session_id == id)
+
+        result = engine.connect().execute(query).scalar()
+
+        if result is None:
+            return None  
+        
+        notes_2d = json.loads(result)
+        notes_3d = db_function.convert_2d_to_3d(notes_2d)
+
+        return notes_3d
 
     ############# insert rows into  tables
 
@@ -214,6 +236,19 @@ class db_function:
     ############### update into tables
 
     #update values in map
+    def update_notes(note):
+        MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
+        conn = engine.connect()
+        
+        notes = db_function.convert_3d_to_2d(note)
+        notes_json = json.dumps(notes)
+        
+        query = db.update(MAP).where(MAP.c.session_id == 1).values(notes = notes_json)
+        conn.execute(query)
+        conn.commit()
+
+
+
     def update_completed_howmanytimes(id):
         MAP = db.Table('MAP', db.MetaData(), autoload_with=engine)
         conn = engine.connect()
@@ -230,13 +265,16 @@ class db_function:
         conn.commit()
 
     #update the session
-    def save_session(sess_id, new_session_map, timestamp):
+    def save_session(sess_id, new_session_map, timestamp, notes):
+        #needed is converting the 3d matrix(notes) into a 2d one and saving to the column sesion_notes
+
         MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
         conn = engine.connect()
-
-        ttimestamp = int(timestamp)
+        notes_2d = db_function.convert_3d_to_2d(notes)
+        notes_json = json.dumps(notes_2d) 
+        ttimestamp = float(timestamp)
         
-        query = db.update(MAP).where(MAP.c.session_id == sess_id).values(time_spent = ttimestamp, session_map = new_session_map)
+        query = db.update(MAP).where(MAP.c.session_id == sess_id).values(time_spent = ttimestamp, session_map = new_session_map,notes = notes_json)
         conn.execute(query)
         conn.commit()
 
