@@ -1,12 +1,8 @@
 
-''' how we can access the db test file'''
+''' this is just a testfile remove later '''
 
 
-from db_manager import db_function as db
-
-from sys import path
-path.append("..")
-
+from database.db_manager import db_function as db
 
 
 matrix = [
