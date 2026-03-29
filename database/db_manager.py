@@ -7,7 +7,7 @@
 import sqlalchemy as db
 import json 
 
-engine = engine = db.create_engine('sqlite:///pydoku.db')
+engine = engine = db.create_engine('sqlite:///database/pydoku.db')
 
 class db_function:
 
@@ -123,6 +123,15 @@ class db_function:
         MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
 
         query = db.select(MAP.c.session_id,MAP.c.session_map).where(MAP.columns.map_id == id)
+
+        result = engine.connect().execute(query).fetchall()
+
+        return result
+    
+    def get_all_session_id_and_map():
+        MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
+
+        query = db.select(MAP.c.session_id,MAP.c.session_map)
 
         result = engine.connect().execute(query).fetchall()
 

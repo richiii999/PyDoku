@@ -2,12 +2,12 @@
 ''' how we can access the db test file'''
 
 
-from db_manager import db_function as db
-
-from sys import path
-path.append("..")
 
 
+
+
+
+from database.db_manager import db_function as db
 
 matrix = [
     [[1,2,3,4], [1,2,3,4], [1,2,3,4]],
