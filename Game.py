@@ -12,9 +12,9 @@ class SudokuGame:
 
         # Board states
         states = Generator.GenerateSudokuSet(difficulty, RNG=RNG)
-        self.initial = deepcopy(states[0])
-        self.curr = states[0]
-        self.solution = states[1]
+        self.initial  = deepcopy(states[0])
+        self.curr     = deepcopy(states[0])
+        self.solution = deepcopy(states[1])
         self.notes = [ [ [] for _ in range(9) ] for _ in range(9)]
         # Notes structure kinda bloated tbh
 
@@ -37,7 +37,7 @@ class SudokuGame:
         """Attempts to place val at [row][col]"""
         if row < 0 or row > 8: raise ValueError("Invalid row")
         if col < 0 or col > 8: raise ValueError("Invalid col")
-        if val < 0 or val > 9: raise ValueError("Invalid val")
+        if val < 1 or val > 9: raise ValueError("Invalid val")
 
         print(f"Placing {val} @ {row},{col}")
 
@@ -48,6 +48,7 @@ class SudokuGame:
         elif val == self.curr[row][col]:
             print("Duplicate, removing tile")
             self.curr[row][col] = 0
+            return
 
         if val != 0 and not self.solution[row][col] == val:
             self.meta.numMistakes += 1
@@ -127,8 +128,10 @@ for i in g1.notes:
 print(f"Slots={total}")
 
 print("TEST: Solving board")
-g1.curr = g1.solution
+g1.curr = deepcopy(g1.solution)
 g1.prettyPrint(info=True)
 g1.PlaceTile(0,0,1) # Removing a tile
 g1.PlaceTile(0,0,8) # Placing the final tile
 # Should win here
+
+#
