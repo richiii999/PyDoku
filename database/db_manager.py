@@ -278,6 +278,16 @@ class db_function:
         conn.execute(query)
         conn.commit()
 
+    def update_time(sess_id,time):
+
+        MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
+        conn = engine.connect()
+        ttimestamp = float(time)
+        
+        query = db.update(MAP).where(MAP.c.session_id == sess_id).values(time_spent = ttimestamp)
+        conn.execute(query)
+        conn.commit()
+
     def update_completion_status_true(ses_id):
         MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
         conn = engine.connect()

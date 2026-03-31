@@ -46,4 +46,4 @@ def GamesByTime():
     plt.xlabel("Session ID")
     plt.ylabel("Time Spent")
     plt.show()
-
+GamesByTime()
