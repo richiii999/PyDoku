@@ -5,3 +5,8 @@ Play Sudoku in Python. Browse past games, their stats, and generate new games wi
 
 
 # Database functions are in database/db_manager.py classname db_function
+
+# Todo for Elijah
+- Gui
+- Logging
+- Verification (if u want)
