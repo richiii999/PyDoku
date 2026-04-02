@@ -107,7 +107,7 @@ class db_function:
     def get_difficulty(id):
         MAP = db.Table('MAP', db.MetaData(), autoload_with=engine)
 
-        query = db.select(MAP.c.difficulty).where(MAP.columns.session_id == id)
+        query = db.select(MAP.c.difficulty).where(MAP.columns.map_id == id)
 
         result = engine.connect().execute(query).scalar()
 
@@ -337,12 +337,12 @@ class db_function:
         conn.execute(query)
         conn.commit()
 
-    def update_difficulty(difficulty,ses_id):
+    def update_difficulty(diffi,id):
         MAP = db.Table('MAP', db.MetaData(), autoload_with=engine)
         conn = engine.connect()
 
         
-        query = db.update(MAP).where(MAP.c.session_id == ses_id).values(difficulty = difficulty)
+        query = db.update(MAP).where(MAP.c.map_id == id).values(difficulty = diffi)
         conn.execute(query)
         conn.commit()
 
