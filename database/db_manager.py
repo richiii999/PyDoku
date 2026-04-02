@@ -131,6 +131,15 @@ class db_function:
 
 
     ###########FUNCTIONS FOR THE SESSION ARE HERE
+
+    def get_completed_sessions():
+        MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
+
+        query = db.select(MAP.c.session_id,MAP.c.session_map).where(MAP.columns.completion_status == 1)
+
+        result = engine.connect().execute(query).fetchall()
+        return result
+   
     def get_session_id_and_map(id):
         MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
 
