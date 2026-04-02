@@ -72,10 +72,9 @@ def Difficulty():
         return
 
     df = pd.DataFrame(completed)
-    plt.pie(df['session_id'].sum(), labels = df['map_difficulty'], autopct='%1.1f%%')
-    plt.title("Difficulty")
-    plt.xlabel("Difficulty")
-    plt.ylabel("Sessions")
+    difficulty_counts = df['map_difficulty'].value_counts()
+    plt.pie(difficulty_counts.values, labels = difficulty_counts.index, autopct='%1.1f%%')
+    plt.title("Session Distribution by Difficulty")
     plt.show()
  
 
