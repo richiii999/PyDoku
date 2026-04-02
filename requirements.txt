@@ -1,0 +1,11 @@
+# PyDoku Requirements
+# uv add -r requirements.txt
+
+numpy
+
+# Graphing
+matplotlib
+seaborn
+
+# Database
+sqlalchemy
