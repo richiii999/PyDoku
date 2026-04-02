@@ -20,10 +20,10 @@ class SudokuGame:
         self.notes = np.zeros((9,9,9), dtype='int')
 
         # Metadata
-        self.time = time # How long the game took (in sec)
-        self.numMistakes = mistakes # Num placements not in solution
-        self.numNotes = notes # Num notes added
-        self.difficulty = difficulty # Num empty squares started with
+        self.time = 0 # How long the game took (in sec)
+        self.numMistakes = 0 # Num placements not in solution
+        self.numNotes = 0 # Num notes added
+        self.difficulty = 0 # Num empty squares started with
     
         # Metadata
         self.meta = Gamedata.Gamedata(difficulty=difficulty)
