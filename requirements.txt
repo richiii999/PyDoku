@@ -4,6 +4,7 @@
 numpy
 
 # Graphing
+pyqt6
 matplotlib
 seaborn
 
