@@ -1,12 +1,46 @@
 
 ''' this is just a testfile remove later '''
 
+from bisect import insort # Used for inserting to lists in-order
+from copy import deepcopy # Deepcopy the board since its nested lists
+import numpy as np # Multi-dim arrays easily
+
 
 from database.db_manager import db_function as db
-for i in range(6):
-    db.update_time(i,79.0)
+import Generator as gen
+
+
+
+
+
+import random
+
+
+states = gen.GenerateSudokuSet(6, RNG=3)
+initial  = deepcopy(states[0])
+curr     = deepcopy(states[0]) 
+solution = deepcopy(states[1])
+
+
+for i in range(10):
+    newid = db.add_new_map(initial,solution,i)
+    print(newid)
+
+for i in range(8):
+    time = random.random()
+    time = round(time,2)
+    db.update_time(i,time)
 
 '''
+matrix = [
+    [[1,2,3,4], [1,2,3,4], [1,2,3,4]],
+    [[1,2,3,4], [1,2,3,4], [1,2,3,4]],
+    [[1,2,3,4], [1,2,3,4], [1,2,3,4]]
+]
+
+print("afterwords")
+for row in matrix: print(" ".join(map(str, row)))
+
 all_sessions = db.get_all_map_and_id()
 map_ids = []
 for row in all_sessions:

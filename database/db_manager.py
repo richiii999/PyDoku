@@ -194,18 +194,20 @@ class db_function:
         conn.execute(insert_query)
         conn.commit()
 
-    def add_new_map(map_string,solution_string,diffi):
+    def add_new_map(map_array,solution_array,diffi):
         MAP = db.Table('MAP', db.MetaData(), autoload_with=engine)
         conn = engine.connect()
         
         query = db.select(db.func.max(MAP.c.map_id))
         map_ids = conn.execute(query).scalar()
         new_id = map_ids  + 1 
-        
-        insert_query = MAP.insert().values(map_id=new_id,completed_howmanytimes=None,map=map_string, difficulty = diffi)
+        map_array = db_function.array_to_string(map_array)
+        solution_array = db_function.array_to_string(solution_array)
+
+        insert_query = MAP.insert().values(map_id=new_id,completed_howmanytimes=None,map=map_array, difficulty = diffi)
         conn.execute(insert_query)
         conn.commit()
-        db_function.add_solution(new_id,solution_string)
+        db_function.add_solution(new_id,solution_array)
 
         return new_id
     
