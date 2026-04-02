@@ -96,5 +96,3 @@ class SudokuGame:
         # TODO
         # Stop timer
         # Save metadata to DB
-
-sd = SudokuGame()
