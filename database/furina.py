@@ -1,8 +1,23 @@
 
-''' how we can access the db test file'''
+''' this is just a testfile remove later '''
 
 
+from database.db_manager import db_function as db
+for i in range(6):
+    db.update_time(i,79.0)
 
+'''
+all_sessions = db.get_all_map_and_id()
+map_ids = []
+for row in all_sessions:
+    map_ids.append(row[0])
+print(map_ids)
+
+sessions = db.get_session_id_and_map(1)  
+session_id = []
+for row in sessions:
+    session_id.append(row[0])
+print(session_id)
 
 
 
@@ -25,7 +40,6 @@ notes = db.get_notes(1)
 print("getback")
 for row in notes: print(" ".join(map(str, row)))
 
-'''
 matrix = db.convert_2d_to_3d(notes)
 for row in matrix: print(" ".join(map(str, row)))
 
@@ -37,10 +51,6 @@ solution = db.array_to_string(sudokuSet[1])
 
 
 new_map_id = db.add_new_map(new_map,solution) #returns back it's id
-
-
-
-
 
 
 
