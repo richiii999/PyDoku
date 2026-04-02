@@ -8,5 +8,8 @@ pyqt6
 matplotlib
 seaborn
 
+# Dataframes
+pandas
+
 # Database
 sqlalchemy
