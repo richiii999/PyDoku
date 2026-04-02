@@ -24,9 +24,6 @@ class SudokuGame:
         self.numMistakes = 0 # Num placements not in solution
         self.numNotes = 0 # Num notes added
         self.difficulty = 0 # Num empty squares started with
-    
-        # Metadata
-        self.meta = Gamedata.Gamedata(difficulty=difficulty)
 
     def prettyPrint(self, grid=None, wall='|', floor='-', empty='.', info=False) -> None:
         """Prints the full Sudoku board with formatting"""
