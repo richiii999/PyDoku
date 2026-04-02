@@ -3,7 +3,6 @@
 # Stores the current game state and has functions to play the game
 
 import Generator # Generate Sudoku initial and solution states
-from bisect import insort # Used for inserting to lists in-order
 from copy import deepcopy # Deepcopy the board since its nested lists
 import numpy as np # Multi-dim arrays easily
 
@@ -34,7 +33,7 @@ class SudokuGame:
             print(f"{txtRow[0]} {txtRow[1]} {txtRow[2]} {wall} {txtRow[3]} {txtRow[4]} {txtRow[5]} {wall} {txtRow[6]} {txtRow[7]} {txtRow[8]}")
 
         if info:
-            print(f"Mistakes={self.meta.numMistakes}, Notes={self.meta.numNotes}\n")
+            print(f"Mistakes={self.numMistakes}, Notes={self.numNotes}\n")
 
     def PlaceTile(self, row, col, val) -> None:
         """Attempts to place val at [row][col]"""
@@ -54,7 +53,7 @@ class SudokuGame:
             return
 
         if val != 0 and not self.solution[row][col] == val:
-            self.meta.numMistakes += 1
+            self.numMistakes += 1
 
         self.curr[row][col] = val
 
@@ -72,13 +71,13 @@ class SudokuGame:
         if self.initial[row][col] != 0:
             print("Tile in initial state, ignoring note")
 
-        elif val in self.notes[row][col]:
+        elif val == self.notes[row][col][val-1]:
             print("Duplicate, removing note")
-            self.notes[row][col].remove(val)
+            self.notes[row][col][val-1] = 0
 
         else:
-            insort(self.notes[row][col], val) # Insert in-order
-            self.meta.numNotes += 1
+            self.notes[row][col][val-1] = val
+            self.numNotes += 1
 
     def IsSolved(self) -> bool:
         """Returns T/F if board is solved"""
