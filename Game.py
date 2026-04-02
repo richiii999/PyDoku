@@ -6,6 +6,7 @@ import Generator # Generate Sudoku initial and solution states
 import Gamedata # Metadata struct
 from bisect import insort # Used for inserting to lists in-order
 from copy import deepcopy # Deepcopy the board since its nested lists
+import numpy as np # Multi-dim arrays easily
 
 class SudokuGame:
     def __init__(self, difficulty = 40, RNG=None):
@@ -15,9 +16,15 @@ class SudokuGame:
         self.initial  = deepcopy(states[0])
         self.curr     = deepcopy(states[0])
         self.solution = deepcopy(states[1])
-        self.notes = [ [ [] for _ in range(9) ] for _ in range(9)]
-        # Notes structure kinda bloated tbh
 
+        self.notes = np.zeros((9,9,9), dtype='int')
+
+        # Metadata
+        self.time = time # How long the game took (in sec)
+        self.numMistakes = mistakes # Num placements not in solution
+        self.numNotes = notes # Num notes added
+        self.difficulty = difficulty # Num empty squares started with
+    
         # Metadata
         self.meta = Gamedata.Gamedata(difficulty=difficulty)
 
@@ -90,3 +97,4 @@ class SudokuGame:
         # Stop timer
         # Save metadata to DB
 
+sd = SudokuGame()
