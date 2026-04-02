@@ -102,6 +102,18 @@ class db_function:
 
         print(result)
         return result
+    
+        
+    def get_difficulty(id):
+        MAP = db.Table('MAP', db.MetaData(), autoload_with=engine)
+
+        query = db.select(MAP.c.difficulty).where(MAP.columns.session_id == id)
+
+        result = engine.connect().execute(query).scalar()
+
+        return result
+
+
 
     ########## MAP SOLUTIONS ARE HERE
     def get_solution_and_id(id):
@@ -159,6 +171,16 @@ class db_function:
         notes_3d = db_function.convert_2d_to_3d(notes_2d)
 
         return notes_3d
+    
+    def get_num_errors(id):
+        MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
+
+        query = db.select(MAP.c.num_errors).where(MAP.columns.session_id == id)
+
+        result = engine.connect().execute(query).scalar()
+
+        return result
+
 
     ############# insert rows into  tables
 
@@ -172,7 +194,7 @@ class db_function:
         conn.execute(insert_query)
         conn.commit()
 
-    def add_new_map(map_string,solution_string):
+    def add_new_map(map_string,solution_string,diffi):
         MAP = db.Table('MAP', db.MetaData(), autoload_with=engine)
         conn = engine.connect()
         
@@ -180,7 +202,7 @@ class db_function:
         map_ids = conn.execute(query).scalar()
         new_id = map_ids  + 1 
         
-        insert_query = MAP.insert().values(map_id=new_id,completed_howmanytimes=None,map=map_string )
+        insert_query = MAP.insert().values(map_id=new_id,completed_howmanytimes=None,map=map_string, difficulty = diffi)
         conn.execute(insert_query)
         conn.commit()
         db_function.add_solution(new_id,solution_string)
@@ -305,6 +327,28 @@ class db_function:
         query = db.update(MAP).where(MAP.c.session_id == ses_id).values(completion_status = 0)
         conn.execute(query)
         conn.commit()
+
+    def update_num_errors(newerror,ses_id):
+        MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
+        conn = engine.connect()
+
+        
+        query = db.update(MAP).where(MAP.c.session_id == ses_id).values(num_errors = newerror)
+        conn.execute(query)
+        conn.commit()
+
+    def update_difficulty(difficulty,ses_id):
+        MAP = db.Table('MAP', db.MetaData(), autoload_with=engine)
+        conn = engine.connect()
+
+        
+        query = db.update(MAP).where(MAP.c.session_id == ses_id).values(difficulty = difficulty)
+        conn.execute(query)
+        conn.commit()
+
+
+    
+
     '''
     update_completed_howmanytimes(1)
     get_completed_howmanytimes(1)
