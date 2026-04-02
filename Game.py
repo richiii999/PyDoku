@@ -59,7 +59,7 @@ class SudokuGame:
 
         self.curr[row][col] = val
 
-        if self.CheckIfWin(): self.Win()
+        if self.IsSolved(): self.SubmitToDB()
 
 
     def AddNote(self, row, col, val) -> None:
@@ -81,14 +81,14 @@ class SudokuGame:
             insort(self.notes[row][col], val) # Insert in-order
             self.meta.numNotes += 1
 
-    def CheckIfWin(self) -> bool:
+    def IsSolved(self) -> bool:
         """Returns T/F if board is solved"""
         return self.curr == self.solution
 
-    def Win(self) -> None:
+    def SubmitToDB(self) -> None:
         """Stops the game and submits it to the database if won"""
         print("Win!")
-        if not self.CheckIfWin(): raise RuntimeError("Tried to win an unsolved board!")
+        if not self.IsSolved(): raise RuntimeError("Tried to win an unsolved board!")
 
         # TODO
         # Stop timer
