@@ -1,13 +1,20 @@
 
 ''' this is just a testfile remove later '''
 
+from database.db_manager import db_function as db
+
+print(db.get_completed_sessions())
+
+'''
 from bisect import insort # Used for inserting to lists in-order
 from copy import deepcopy # Deepcopy the board since its nested lists
 import numpy as np # Multi-dim arrays easily
 
 
-from database.db_manager import db_function as db
+
 import Generator as gen
+
+
 
 
 
@@ -26,12 +33,12 @@ for i in range(10):
     newid = db.add_new_map(initial,solution,i)
     print(newid)
 
-for i in range(8):
+for i in range(18):
     time = random.random()
     time = round(time,2)
     db.update_time(i,time)
 
-'''
+
 matrix = [
     [[1,2,3,4], [1,2,3,4], [1,2,3,4]],
     [[1,2,3,4], [1,2,3,4], [1,2,3,4]],
