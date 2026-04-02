@@ -3,7 +3,6 @@
 # Stores the current game state and has functions to play the game
 
 import Generator # Generate Sudoku initial and solution states
-import Gamedata # Metadata struct
 from bisect import insort # Used for inserting to lists in-order
 from copy import deepcopy # Deepcopy the board since its nested lists
 import numpy as np # Multi-dim arrays easily
