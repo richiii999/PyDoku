@@ -2,7 +2,7 @@
 ### allows to fetch and update the sql database
 
 
-## TODo:add new column for the notes 3d matrix for the session
+###make the save to db functions in game still fix the 3d matrix issues
 
 import sqlalchemy as db
 import json 
@@ -36,7 +36,7 @@ class db_function:
         j=0
         e =0
         for i in range(81):
-            if(i%9==0 and i != 0): #there is a method to this madness
+            if(i%9==0 and i != 0):
                 j+=1
                 e=0
                 
@@ -55,13 +55,7 @@ class db_function:
 
         return new_string
 
-    '''
-    bluh = string_to_array('000601005000000890630508024500016200900000000000302000100000080200030000090405000')
-
-    print(bluh)
-    print(array_to_string(bluh))
-    '''
-
+    
 
     ####################### fetch functions
 
@@ -123,10 +117,7 @@ class db_function:
 
         result = engine.connect().execute(query).fetchall()
 
-        '''
-        result = get_map_by_id(1,get_connection()) #return id and the map
-        print(result[0][1]) #should print only the map
-        '''
+    
         return result
 
 
@@ -267,20 +258,16 @@ class db_function:
         conn.commit()
 
     ############### update into tables
+    #update the map 
 
-    #update values in map
-    def update_notes(note):
-        MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
+    def update_difficulty(diffi,id):
+        MAP = db.Table('MAP', db.MetaData(), autoload_with=engine)
         conn = engine.connect()
+
         
-        notes = db_function.convert_3d_to_2d(note)
-        notes_json = json.dumps(notes)
-        
-        query = db.update(MAP).where(MAP.c.session_id == 1).values(notes = notes_json)
+        query = db.update(MAP).where(MAP.c.map_id == id).values(difficulty = diffi)
         conn.execute(query)
         conn.commit()
-
-
 
     def update_completed_howmanytimes(id):
         MAP = db.Table('MAP', db.MetaData(), autoload_with=engine)
@@ -297,7 +284,19 @@ class db_function:
         conn.execute(query)
         conn.commit()
 
-    #update the session
+
+    #update values in session
+    def update_notes(note):
+        MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
+        conn = engine.connect()
+        
+        notes = db_function.convert_3d_to_2d(note)
+        notes_json = json.dumps(notes)
+        
+        query = db.update(MAP).where(MAP.c.session_id == 1).values(notes = notes_json)
+        conn.execute(query)
+        conn.commit()
+
     def save_session(sess_id, new_session_map, timestamp, notes):
         #needed is converting the 3d matrix(notes) into a 2d one and saving to the column sesion_notes
 
@@ -348,39 +347,3 @@ class db_function:
         conn.execute(query)
         conn.commit()
 
-    def update_difficulty(diffi,id):
-        MAP = db.Table('MAP', db.MetaData(), autoload_with=engine)
-        conn = engine.connect()
-
-        
-        query = db.update(MAP).where(MAP.c.map_id == id).values(difficulty = diffi)
-        conn.execute(query)
-        conn.commit()
-
-
-    
-
-    '''
-    update_completed_howmanytimes(1)
-    get_completed_howmanytimes(1)
-    '''
-
-
-
-    '''
-
-    new_id = create_new_map('000601005000000890630508024500016200900000000000302000100000080200030000090405000')
-    print(get_map_and_id(new_id))
-
-    statement1 = books.insert().values(bookId=1, book_price=12.2,
-                                    genre='fiction',
-                                    book_name='Old age')
-    '''
-
-
-
-    '''
-    db.select([films]).where(db.and_(films.columns.certification == 'R',
-                                    films.columns.release_year > 2003))
-                                    
-    '''

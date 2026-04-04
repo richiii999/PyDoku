@@ -14,12 +14,6 @@ import numpy as np # Multi-dim arrays easily
 
 import Generator as gen
 
-
-
-
-
-
-
 import random
 
 
