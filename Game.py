@@ -81,7 +81,8 @@ class SudokuGame:
 
     def IsSolved(self) -> bool:
         """Returns T/F if board is solved"""
-        return self.curr == self.solution
+        return self.curr == self.solution 
+    ###TODO: FINISH TH ISSOLVED
 
     def SubmitToDB(self) -> None:
         """Stops the game and submits it to the database if won"""
@@ -91,3 +92,12 @@ class SudokuGame:
         # TODO
         # Stop timer
         # Save metadata to DB
+
+        ##FUNCITONS WE NEED DONE
+#####TODO: FINISH THE SAVE SESION FUNCTIONS
+#### TODO: RUN SESSION aka pull a session id from list and then call that session info from the db
+####TODO: GET PREVIOUS SESSION LIST MAKE SURE THE STATUS IS THERE so a list of session_ids and their completion status
+####TODO: generate new game needs to be it's own seperate functoin
+
+
+
