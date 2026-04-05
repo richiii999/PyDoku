@@ -7,21 +7,21 @@ from copy import deepcopy # Deepcopy the board since its nested lists
 import numpy as np # Multi-dim arrays easily
 
 class SudokuGame:
-    def __init__(self, difficulty = 40, RNG=None):
+    def __init__(self, initial=None, curr=None, solution=None, notes=None, time=0, numMistakes=0, numNotes=0, difficulty=40, RNG=None):
 
         # Board states
         states = Generator.GenerateSudokuSet(difficulty, RNG=RNG)
-        self.initial  = deepcopy(states[0])
-        self.curr     = deepcopy(states[0])
-        self.solution = deepcopy(states[1])
+        self.initial  = (initial  is not None) ? initial  : deepcopy(states[0])
+        self.curr     = (curr     is not None) ? curr     : deepcopy(states[0])
+        self.solution = (solution is not None) ? solution : deepcopy(states[1])
 
-        self.notes = np.zeros((9,9,9), dtype='int')
+        self.notes = (notes is not None) ? notes : np.zeros((9,9,9), dtype='int')
 
         # Metadata
-        self.time = 0 # How long the game took (in sec)
-        self.numMistakes = 0 # Num placements not in solution
-        self.numNotes = 0 # Num notes added
-        self.difficulty = 0 # Num empty squares started with
+        self.time        = time # How long the game took (in sec)
+        self.numMistakes = numMistakes # Num placements not in solution
+        self.numNotes    = numNotes # Num notes added
+        self.difficulty  = difficulty # Num empty squares started with
 
     def prettyPrint(self, grid=None, wall='|', floor='-', empty='.', info=False) -> None:
         """Prints the full Sudoku board with formatting"""
@@ -81,8 +81,8 @@ class SudokuGame:
 
     def IsSolved(self) -> bool:
         """Returns T/F if board is solved"""
-        return self.curr == self.solution 
-    ###TODO: FINISH TH ISSOLVED
+        return self.curr == self.solution
+
 
     def SubmitToDB(self) -> None:
         """Stops the game and submits it to the database if won"""
@@ -97,7 +97,4 @@ class SudokuGame:
 #####TODO: FINISH THE SAVE SESION FUNCTIONS
 #### TODO: RUN SESSION aka pull a session id from list and then call that session info from the db
 ####TODO: GET PREVIOUS SESSION LIST MAKE SURE THE STATUS IS THERE so a list of session_ids and their completion status
-####TODO: generate new game needs to be it's own seperate functoin
-
-
 
