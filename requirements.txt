@@ -2,6 +2,7 @@
 # uv add -r requirements.txt
 
 numpy
+pygame
 
 # Graphing
 pyqt6

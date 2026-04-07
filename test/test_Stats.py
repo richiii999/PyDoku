@@ -5,3 +5,7 @@ path.append(".")
 import Stats
 
 Stats.GamesByTime()
+Stats.ErrorRate()
+Stats.Difficulty()
+
+

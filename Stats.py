@@ -77,7 +77,3 @@ def Difficulty():
     plt.title("Session Distribution by Difficulty")
     plt.show()
  
-
-GamesByTime()
-ErrorRate()
-Difficulty()
