@@ -60,6 +60,20 @@ class Pydoku:
         self.stat_error_btn = Button(center_x, 380, btn_w, btn_h, "Error Rates", self.colors['tertiary'], (0,0,0))
         self.stat_diff_btn = Button(center_x, 460, btn_w, btn_h, "Difficulty", self.colors['fourth'], (0,0,0))
 
+        # Timer UI
+        self.TIMER_EVENT = pygame.USEREVENT + 1
+        # Increment every second
+        pygame.time.set_timer(self.TIMER_EVENT, 1000) 
+        # Elijah can change to what he desires  
+        self.timer_font = pygame.font.SysFont("Arial", 32)
+
+        # Create our music object
+        pygame.mixer.init()
+        pygame.mixer.music.load("music.mp3") 
+        pygame.mixer.music.set_volume(0.5)
+        # Loop forever
+        pygame.mixer.music.play(-1)  
+        
     def load_settings(self) -> None:
         with open('settings.json', 'r') as f:
             data = json.load(f)
@@ -118,7 +132,16 @@ class Pydoku:
                     num_rect = num_surf.get_rect(center=(self.grid_offset_x + c * self.cell_size + self.cell_size//2, 
                                                         self.grid_offset_y + r * self.cell_size + self.cell_size//2))
                     self.screen.blit(num_surf, num_rect)
-        
+
+        # Get the current time and seperate it into minute/seconds     
+        elapsed_time = self.game.time
+        mins, secs = divmod(elapsed_time, 60)
+        # Create the actual shape and render to the screen 
+        time_str = f"{mins:02d}:{secs:02d}"
+        time_surf = self.timer_font.render(time_str, True, self.colors['primary'])
+        time_rect = time_surf.get_rect(center=(self.width // 2, self.grid_offset_y - 40))
+        self.screen.blit(time_surf, time_rect)
+
     def run(self) -> None:
         while self.running:
             for event in pygame.event.get():
@@ -163,7 +186,7 @@ class Pydoku:
         elif self.stat_diff_btn.is_clicked(event):
             self.spawn_stats_process(Stats.Difficulty)
 
-    def handle_game_events(self, event) -> None:
+    def handle_game_events(self, event) -> None:        
         if self.back_btn.is_clicked(event):
             self.state = "HOME"
             self.selected_cell = None
@@ -181,6 +204,10 @@ class Pydoku:
                 self.game.PlaceTile(r, c, event.key - pygame.K_0)
             elif event.key == pygame.K_BACKSPACE or event.key == pygame.K_0:
                 self.game.curr[r][c] = 0 
+
+        # Increment our game time 
+        if event.type == self.TIMER_EVENT and self.game:
+            self.game.time += 1 
 
 if __name__ == "__main__":
     app = Pydoku()
