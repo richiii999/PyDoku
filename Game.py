@@ -11,17 +11,19 @@ class SudokuGame:
     def __init__(self, initial=None, curr=None, solution=None, notes=None, time=0, numMistakes=0, numNotes=0, difficulty=40, RNG=None):
         # Board states
         states = Generator.GenerateSudokuSet(difficulty, RNG=RNG)
-        self.initial  = (initial  is not None) ? initial  : deepcopy(states[0]) # Initial values cannot be changed
-        self.curr     = (curr     is not None) ? curr     : deepcopy(states[0]) # At the start, curr is just initial
-        self.solution = (solution is not None) ? solution : deepcopy(states[1]) # Solution to check mistakes against
+        self.initial  =  initial  if (initial  is not None) else deepcopy(states[0]) # Initial values cannot be changed
+        self.curr     =  curr     if (curr     is not None) else deepcopy(states[0]) # At the start, curr is just initial
+        self.solution =  solution if (solution is not None) else deepcopy(states[1]) # Solution to check mistakes against
 
-        self.notes = (notes is not None) ? notes : np.zeros((9,9,9), dtype='int') # 3D Grid of 0's
+        self.notes = notes if (notes is not None) else np.zeros((9,9,9), dtype='int') # 3D Grid of 0's
 
         # Metadata
         self.time        = time        # How long the game took (in sec)
         self.numMistakes = numMistakes # Num placements not in solution
         self.numNotes    = numNotes    # Num notes added
         self.difficulty  = difficulty  # Num empty squares started with
+
+        print(f"Sol={self.solution}")
 
     def prettyPrint(self, grid=None, wall='|', floor='-', empty='.', info=False) -> None:
         """Prints the full Sudoku board with formatting"""
