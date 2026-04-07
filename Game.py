@@ -87,11 +87,6 @@ class SudokuGame:
         """Returns T/F if board is solved"""
         return self.curr == self.solution
 
-    def check_then_close(self) -> None:
-        """Stops the game and submits it to the database if won"""
-        print("Win!")
-        if not self.IsSolved(): raise RuntimeError("Tried to win an unsolved board!")
-
     def SubmitToDB(self, session_id) -> None:
         sess_id = session_id
 
@@ -104,9 +99,3 @@ class SudokuGame:
         #actual update the session with timestamps and update it's completion status fo rthis object
         db.save_session(session_id, self.curr, self.time, self.notes)
         db.update_completion_status(sess_id,self.IsSolved())
-
-
-
-
-
-
