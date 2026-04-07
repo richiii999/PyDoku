@@ -1,53 +1,187 @@
-from database.db_manager import db_function as db
-from Game import Sudokugame as sg
+import pygame
+import json
+import sys
+import multiprocessing
+import Stats  # To access graphing functions
+from Game import SudokuGame
 
-print(db.get_completed_sessions())
+class Button:
+    def __init__(self, x, y, w, h, text, color, text_color):
+        self.rect = pygame.Rect(x, y, w, h)
+        self.text = text
+        self.color = color
+        self.text_color = text_color
+        self.font = pygame.font.SysFont("Arial", 28, bold=True)
 
+    def draw(self, screen):
+        pygame.draw.rect(screen, self.color, self.rect, border_radius=8)
+        txt_surf = self.font.render(self.text, True, self.text_color)
+        txt_rect = txt_surf.get_rect(center=self.rect.center)
+        screen.blit(txt_surf, txt_rect)
 
-def newgame():
-    newgame = sg()
-    return newgame
-    
+    def is_clicked(self, event):
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            return self.rect.collidepoint(event.pos)
+        return False
 
-def previousgame(id):
-    session_map = db.get_session_id_and_map(id)
-    solution = db.get_solution_and_id(id)
-    initial = db.get_initial_map(id)
-    notes = db.get_notes(id)
-    previous_session = sg(initial, session_map, solution,notes)
-    return previous_session
+class Pydoku:
+    def __init__(self) -> None:
+        pygame.init()
+        self.load_settings()
+        
+        self.screen = pygame.display.set_mode((self.width, self.height))
+        pygame.display.set_caption("PyDoku")
+        self.clock = pygame.time.Clock()
+        
+        self.state = "HOME"
+        self.running = True
+        self.game = None 
+        self.selected_cell = None 
 
+        # UI Constants
+        self.cell_size = 50
+        self.grid_offset_x = (self.width - (self.cell_size * 9)) // 2
+        self.grid_offset_y = 150
+        
+        btn_w, btn_h = 240, 60
+        center_x = (self.width // 2) - (btn_w // 2)
+        
+        self.title_font = pygame.font.SysFont("Arial", 64, bold=True)
+        self.num_font = pygame.font.SysFont("Arial", 32)
+        
+        # Navigation Buttons
+        self.play_btn = Button(center_x, 300, btn_w, btn_h, "Play Game", self.colors['primary'], (255,255,255))
+        self.stats_btn = Button(center_x, 380, btn_w, btn_h, "Statistics", self.colors['secondary'], (255,255,255))
+        self.opts_btn = Button(center_x, 460, btn_w, btn_h, "Options", self.colors['tertiary'], (0,0,0))
+        self.back_btn = Button(20, 20, 100, 40, "Back", self.colors['primary'], (255, 255, 255))
 
+        # Stats Screen Specific Buttons
+        self.stat_time_btn = Button(center_x, 300, btn_w, btn_h, "Play Time", self.colors['secondary'], (255,255,255))
+        self.stat_error_btn = Button(center_x, 380, btn_w, btn_h, "Error Rates", self.colors['tertiary'], (0,0,0))
+        self.stat_diff_btn = Button(center_x, 460, btn_w, btn_h, "Difficulty", self.colors['fourth'], (0,0,0))
 
+    def load_settings(self) -> None:
+        with open('settings.json', 'r') as f:
+            data = json.load(f)
+        self.colors = data['colors']
+        self.width = data['window']['width']
+        self.height = data['window']['height']
+        self.fps = data['window']['fps']
 
-###plese pick on of the two idk what ones you want
-    
-#when button pressed run get all sessions
-def get_all_sessions_ids():
-   allsessions =  db.get_all_sessions_ids()
-   #hopefully all sesssions printed with indexes
-   return allsessions
+    def spawn_stats_process(self, target_func):
+        """Spawns a new OS process for Matplotlib to ensure thread-safe GUI rendering"""
+        p = multiprocessing.Process(target=target_func)
+        p.daemon = True
+        p.start()
 
+    def draw_home(self) -> None:
+        self.screen.fill(self.colors['background'])
+        title_surf = self.title_font.render("PyDoku", True, self.colors['primary'])
+        self.screen.blit(title_surf, title_surf.get_rect(center=(self.width // 2, 150)))
+        self.play_btn.draw(self.screen)
+        self.stats_btn.draw(self.screen)
+        self.opts_btn.draw(self.screen)
 
+    def draw_stats(self) -> None:
+        self.screen.fill(self.colors['background'])
+        title_surf = self.title_font.render("Statistics", True, self.colors['primary'])
+        self.screen.blit(title_surf, title_surf.get_rect(center=(self.width // 2, 150)))
+        self.stat_time_btn.draw(self.screen)
+        self.stat_error_btn.draw(self.screen)
+        self.stat_diff_btn.draw(self.screen)
+        self.back_btn.draw(self.screen)
 
-#idk if we want to get the completion status with the session id or not?
-def get_all_sessions_complet():
-   allsessions =  db.get_session_and_status() #returns back id and completion status
+    def draw_game(self) -> None:
+        self.screen.fill(self.colors['background'])
+        self.back_btn.draw(self.screen)
+        
+        for i in range(10):
+            thick = 4 if i % 3 == 0 else 1
+            pygame.draw.line(self.screen, self.colors['primary'], 
+                             (self.grid_offset_x + i * self.cell_size, self.grid_offset_y), 
+                             (self.grid_offset_x + i * self.cell_size, self.grid_offset_y + 9 * self.cell_size), thick)
+            pygame.draw.line(self.screen, self.colors['primary'], 
+                             (self.grid_offset_x, self.grid_offset_y + i * self.cell_size), 
+                             (self.grid_offset_x + 9 * self.cell_size, self.grid_offset_y + i * self.cell_size), thick)
 
-   return allsessions
-#sessions[1][0] <-- for the id
+        if self.selected_cell:
+            r, c = self.selected_cell
+            sel_rect = pygame.Rect(self.grid_offset_x + c * self.cell_size, self.grid_offset_y + r * self.cell_size, self.cell_size, self.cell_size)
+            pygame.draw.rect(self.screen, self.colors['fourth'], sel_rect, 3)
 
-sess = get_all_sessions_complet()
-sessions = sess[1][0]
-ipickthissession = sessions[1]
+        for r in range(9):
+            for c in range(9):
+                val = self.game.curr[r][c]
+                if val != 0:
+                    color = (0, 0, 0) if self.game.initial[r][c] != 0 else self.colors['secondary']
+                    num_surf = self.num_font.render(str(val), True, color)
+                    num_rect = num_surf.get_rect(center=(self.grid_offset_x + c * self.cell_size + self.cell_size//2, 
+                                                        self.grid_offset_y + r * self.cell_size + self.cell_size//2))
+                    self.screen.blit(num_surf, num_rect)
+        
+    def run(self) -> None:
+        while self.running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.running = False
+                
+                if self.state == "HOME":
+                    self.handle_home_events(event)
+                elif self.state == "GAME":
+                    self.handle_game_events(event)
+                elif self.state == "STATS":
+                    self.handle_stats_events(event)
 
-#call object game : D
-previousgame(ipickthissession)
+            if self.state == "HOME":
+                self.draw_home()
+            elif self.state == "GAME":
+                self.draw_game()
+            elif self.state == "STATS":
+                self.draw_stats()
 
+            pygame.display.flip()
+            self.clock.tick(self.fps)
+        pygame.quit()
+        sys.exit()
 
-'''
-notes broke
-   idk how to do this part help me
-   but if selected_session call 
-   previousgame(selected_session)
-'''
+    def handle_home_events(self, event) -> None:
+        if self.play_btn.is_clicked(event):
+            self.game = SudokuGame(difficulty=40)
+            self.state = "GAME"
+        elif self.stats_btn.is_clicked(event):
+            self.state = "STATS"
+        elif self.opts_btn.is_clicked(event):
+            self.state = "OPTIONS"
+
+    def handle_stats_events(self, event) -> None:
+        if self.back_btn.is_clicked(event):
+            self.state = "HOME"
+        if self.stat_time_btn.is_clicked(event):
+            self.spawn_stats_process(Stats.GamesByTime)
+        elif self.stat_error_btn.is_clicked(event):
+            self.spawn_stats_process(Stats.ErrorRate)
+        elif self.stat_diff_btn.is_clicked(event):
+            self.spawn_stats_process(Stats.Difficulty)
+
+    def handle_game_events(self, event) -> None:
+        if self.back_btn.is_clicked(event):
+            self.state = "HOME"
+            self.selected_cell = None
+            return 
+        
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            x, y = event.pos
+            col = (x - self.grid_offset_x) // self.cell_size
+            row = (y - self.grid_offset_y) // self.cell_size
+            self.selected_cell = (row, col) if 0 <= row < 9 and 0 <= col < 9 else None
+        
+        if event.type == pygame.KEYDOWN and self.selected_cell:
+            r, c = self.selected_cell
+            if pygame.K_1 <= event.key <= pygame.K_9:
+                self.game.PlaceTile(r, c, event.key - pygame.K_0)
+            elif event.key == pygame.K_BACKSPACE or event.key == pygame.K_0:
+                self.game.curr[r][c] = 0 
+
+if __name__ == "__main__":
+    app = Pydoku()
+    app.run()
