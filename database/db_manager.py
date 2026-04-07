@@ -59,6 +59,17 @@ class db_function:
 
     ####################### fetch functions
 
+    def ID_exists(id) -> bool:
+        '''Returns T/F if an entry with ID exists'''
+        # TODO:
+        # Connect to DB
+        # Query = select on ID
+        # Check if there is a result
+        # Convert to bool (true = there is a result, false = no result)
+        # Return bool
+
+        return False # TODO
+
     #### from table map
     def get_all_map_and_id():
         MAP = db.Table('MAP', db.MetaData(), autoload_with=engine)

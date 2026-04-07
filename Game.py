@@ -8,7 +8,7 @@ import numpy as np # Multi-dim arrays easily
 from database.db_manager import db_function as db
 
 class SudokuGame:
-    def __init__(self, initial=None, curr=None, solution=None, notes=None, time=0, numMistakes=0, numNotes=0, difficulty=40, RNG=None):
+    def __init__(self, initial=None, curr=None, solution=None, notes=None, time=0, numMistakes=0, numNotes=0, difficulty=40, RNG=None, ID=0):
         # Board states
         states = Generator.GenerateSudokuSet(difficulty, RNG=RNG)
         self.initial  =  initial  if (initial  is not None) else deepcopy(states[0]) # Initial values cannot be changed
@@ -23,7 +23,8 @@ class SudokuGame:
         self.numNotes    = numNotes    # Num notes added
         self.difficulty  = difficulty  # Num empty squares started with
 
-        print(f"Sol={self.solution}")
+        print(f"Sol=\n{self.solution}")
+        self.ID = ID if (ID != 0) else db.add_new_map(self.initial, self.solution, self.difficulty)
 
     def prettyPrint(self, grid=None, wall='|', floor='-', empty='.', info=False) -> None:
         """Prints the full Sudoku board with formatting"""
@@ -55,11 +56,12 @@ class SudokuGame:
             return
 
         if val != 0 and not self.solution[row][col] == val:
+            print("Mistake")
             self.numMistakes += 1
 
         self.curr[row][col] = val
 
-        if self.IsSolved(): self.SubmitToDB()
+        if self.IsSolved(): self.SubmitToDB(self.ID)
 
 
     def AddNote(self, row, col, val) -> None:
@@ -93,7 +95,7 @@ class SudokuGame:
     def SubmitToDB(self, session_id) -> None:
         sess_id = session_id
 
-        if self.newmapcreated == True:
+        if not db.ID_exists(sess_id):
            #adding new rows if created a new map
            new_id =  db.add_new_map(self.initial,self.solution,self.difficulty)
            sess_id = db.add_session(new_id,self.curr)
