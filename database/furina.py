@@ -2,8 +2,50 @@
 ''' this is just a testfile remove later '''
 
 from database.db_manager import db_function as db
+from Game import Sudokugame as sg
 
 print(db.get_completed_sessions())
+
+
+
+
+#code goes here          # TODO
+        # Stop timer
+        # Save metadata to DB
+
+        ##FUNCITONS WE NEED DONE
+#####TODO: FINISH THE SAVE SESION FUNCTIONS
+#### TODO: RUN SESSION aka pull a session id from list and then call that session info from the db
+
+
+
+
+####TODO: GET PREVIOUS SESSION LIST MAKE SURE THE STATUS IS THERE so a list of session_ids and their completion status
+####TODO: generate new game needs to be it's own seperate functoin
+
+def newgame():
+    newgame = sg()
+    
+
+def previousgame(id):
+    session_map = db.get_session_id_and_map(id)
+    solution = db.get_solution_and_id(id)
+    initial = db.get_initial_map(id)
+    notes = db.get_notes(id)
+    previous_session = sg(initial, session_map, solution,notes)
+    return previous_session
+
+    
+
+def select_session():
+   allsessions =  db.get_all_sessions()
+   selected_session = allsessions[1][0]
+   '''
+   idk how to do this part help me
+   but if selected_session call 
+   previousgame(selected_session)
+   '''
+
 
 '''
 from bisect import insort # Used for inserting to lists in-order
@@ -21,16 +63,11 @@ states = gen.GenerateSudokuSet(6, RNG=3)
 initial  = deepcopy(states[0])
 curr     = deepcopy(states[0]) 
 solution = deepcopy(states[1])
+db.add_new_map(initial,solution,i)
+db.update_time(i,time)
 
 
-for i in range(10):
-    newid = db.add_new_map(initial,solution,i)
-    print(newid)
 
-for i in range(18):
-    time = random.random()
-    time = round(time,2)
-    db.update_time(i,time)
 
 
 matrix = [

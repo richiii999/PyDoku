@@ -71,7 +71,20 @@ class db_function:
         print(result[1][0]) <-- for the id
         '''
         return result
-    
+
+    def get_initial_map(ses_id):
+        MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
+
+        query = db.select(MAP.c.map_id).where(MAP.columns.session_id == ses_id)
+
+        map_id = engine.connect().execute(query).fetchall()
+        query = db.select(MAP.c.map).where(MAP.columns.session_id == map_id)
+
+        result= engine.connect().execute(query).fetchall()
+        return result
+
+
+
     def get_map_and_id(id):
         MAP = db.Table('MAP', db.MetaData(), autoload_with=engine)
 
@@ -130,15 +143,50 @@ class db_function:
 
         result = engine.connect().execute(query).fetchall()
         return result
-   
+    
+    def get_session_and_status():
+        MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
+
+        query = db.select(MAP.c.session_id,MAP.c.completion_status)
+
+        result = engine.connect().execute(query).fetchall()
+        return result
+    
+    def get_all_sessions_ids():
+        MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
+
+        query = db.select(MAP.c.session_id)
+
+        result = engine.connect().execute(query).fetchall()
+        return result
+
     def get_session_id_and_map(id):
         MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
 
         query = db.select(MAP.c.session_id,MAP.c.session_map).where(MAP.columns.map_id == id)
 
         result = engine.connect().execute(query).fetchall()
+        return result
+
+    def get_one_session_id_and_map(ses_id):
+        MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
+
+        query = db.select(MAP.c.session_id,MAP.c.session_map).where(MAP.columns.session_id == ses_id)
+
+        result = engine.connect().execute(query).fetchall()
 
         return result
+    
+    
+    def get_all_sessions():
+        MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
+
+        query = db.select(MAP.c.session_id,MAP.c.session_map)
+
+        result = engine.connect().execute(query).fetchall()
+
+        return result
+    
 
     def get_completion_time(id):
         MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
@@ -320,23 +368,18 @@ class db_function:
         conn.execute(query)
         conn.commit()
 
-    def update_completion_status_true(ses_id):
+    def update_completion_status(ses_id,completionstatus):
         MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
         conn = engine.connect()
 
-        
-        query = db.update(MAP).where(MAP.c.session_id == ses_id).values(completion_status = 1)
+        if completionstatus == 0:
+            query = db.update(MAP).where(MAP.c.session_id == ses_id).values(completion_status = 0)
+        else:
+            query = db.update(MAP).where(MAP.c.session_id == ses_id).values(completion_status = 1)
         conn.execute(query)
         conn.commit()
 
-    def update_completion_status_false(ses_id):
-        MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
-        conn = engine.connect()
-
-        
-        query = db.update(MAP).where(MAP.c.session_id == ses_id).values(completion_status = 0)
-        conn.execute(query)
-        conn.commit()
+    
 
     def update_num_errors(newerror,ses_id):
         MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)

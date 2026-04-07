@@ -5,23 +5,33 @@
 import Generator # Generate Sudoku initial and solution states
 from copy import deepcopy # Deepcopy the board since its nested lists
 import numpy as np # Multi-dim arrays easily
+from database.db_manager import db_function as db
 
 class SudokuGame:
-    def __init__(self, initial=None, curr=None, solution=None, notes=None, time=0, numMistakes=0, numNotes=0, difficulty=40, RNG=None):
-
+    def __init__(self,initial_map, curr,solution,notes, difficulty = 40, RNG=None):
         # Board states
-        states = Generator.GenerateSudokuSet(difficulty, RNG=RNG)
-        self.initial  = (initial  is not None) ? initial  : deepcopy(states[0])
-        self.curr     = (curr     is not None) ? curr     : deepcopy(states[0])
-        self.solution = (solution is not None) ? solution : deepcopy(states[1])
 
-        self.notes = (notes is not None) ? notes : np.zeros((9,9,9), dtype='int')
+
+        if initial_map == None:  
+            self.newmapcreated = True     
+            states = Generator.GenerateSudokuSet(difficulty, RNG=RNG)
+            self.initial  = deepcopy(states[0])
+            self.curr     = deepcopy(states[0])
+            self.solution = deepcopy(states[1])
+
+            self.notes = np.zeros((9,9,9), dtype='int')
+        else:
+            self.newmapcreated = False
+            self.initial  = deepcopy(initial_map)
+            self.curr     = deepcopy(curr)
+            self.solution = deepcopy(solution)
+            self.notes = notes
 
         # Metadata
-        self.time        = time # How long the game took (in sec)
-        self.numMistakes = numMistakes # Num placements not in solution
-        self.numNotes    = numNotes # Num notes added
-        self.difficulty  = difficulty # Num empty squares started with
+        self.time = 0 # How long the game took (in sec)
+        self.numMistakes = 0 # Num placements not in solution
+        self.numNotes = 0 # Num notes added
+        self.difficulty = 0 # Num empty squares started with
 
     def prettyPrint(self, grid=None, wall='|', floor='-', empty='.', info=False) -> None:
         """Prints the full Sudoku board with formatting"""
@@ -81,20 +91,28 @@ class SudokuGame:
 
     def IsSolved(self) -> bool:
         """Returns T/F if board is solved"""
-        return self.curr == self.solution
-
-
-    def SubmitToDB(self) -> None:
+        return self.curr == self.solution 
+    ###TODO: FINISH TH ISSOLVED
+    def check_then_close(self) -> None:
         """Stops the game and submits it to the database if won"""
         print("Win!")
         if not self.IsSolved(): raise RuntimeError("Tried to win an unsolved board!")
 
-        # TODO
-        # Stop timer
-        # Save metadata to DB
+    def SubmitToDB(self, session_id) -> None:
+        sess_id = session_id
 
-        ##FUNCITONS WE NEED DONE
-#####TODO: FINISH THE SAVE SESION FUNCTIONS
-#### TODO: RUN SESSION aka pull a session id from list and then call that session info from the db
-####TODO: GET PREVIOUS SESSION LIST MAKE SURE THE STATUS IS THERE so a list of session_ids and their completion status
+        if self.newmapcreated == True:
+           #adding new rows if created a new map
+           new_id =  db.add_new_map(self.initial,self.solution,self.difficulty)
+           sess_id = db.add_session(new_id,self.curr)
+        
+
+        #actual update the session with timestamps and update it's completion status fo rthis object
+        db.save_session(session_id, self.curr, self.time, self.notes)
+        db.update_completion_status(sess_id,self.IsSolved())
+
+
+
+
+
 
