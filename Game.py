@@ -8,30 +8,20 @@ import numpy as np # Multi-dim arrays easily
 from database.db_manager import db_function as db
 
 class SudokuGame:
-    def __init__(self,initial_map, curr,solution,notes, difficulty = 40, RNG=None):
+    def __init__(self, initial=None, curr=None, solution=None, notes=None, time=0, numMistakes=0, numNotes=0, difficulty=40, RNG=None):
         # Board states
+        states = Generator.GenerateSudokuSet(difficulty, RNG=RNG)
+        self.initial  = (initial  is not None) ? initial  : deepcopy(states[0]) # Initial values cannot be changed
+        self.curr     = (curr     is not None) ? curr     : deepcopy(states[0]) # At the start, curr is just initial
+        self.solution = (solution is not None) ? solution : deepcopy(states[1]) # Solution to check mistakes against
 
-
-        if initial_map == None:  
-            self.newmapcreated = True     
-            states = Generator.GenerateSudokuSet(difficulty, RNG=RNG)
-            self.initial  = deepcopy(states[0])
-            self.curr     = deepcopy(states[0])
-            self.solution = deepcopy(states[1])
-
-            self.notes = np.zeros((9,9,9), dtype='int')
-        else:
-            self.newmapcreated = False
-            self.initial  = deepcopy(initial_map)
-            self.curr     = deepcopy(curr)
-            self.solution = deepcopy(solution)
-            self.notes = notes
+        self.notes = (notes is not None) ? notes : np.zeros((9,9,9), dtype='int') # 3D Grid of 0's
 
         # Metadata
-        self.time = 0 # How long the game took (in sec)
-        self.numMistakes = 0 # Num placements not in solution
-        self.numNotes = 0 # Num notes added
-        self.difficulty = 0 # Num empty squares started with
+        self.time        = time        # How long the game took (in sec)
+        self.numMistakes = numMistakes # Num placements not in solution
+        self.numNotes    = numNotes    # Num notes added
+        self.difficulty  = difficulty  # Num empty squares started with
 
     def prettyPrint(self, grid=None, wall='|', floor='-', empty='.', info=False) -> None:
         """Prints the full Sudoku board with formatting"""
@@ -91,8 +81,8 @@ class SudokuGame:
 
     def IsSolved(self) -> bool:
         """Returns T/F if board is solved"""
-        return self.curr == self.solution 
-    ###TODO: FINISH TH ISSOLVED
+        return self.curr == self.solution
+
     def check_then_close(self) -> None:
         """Stops the game and submits it to the database if won"""
         print("Win!")
