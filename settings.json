@@ -1,15 +1,38 @@
 {
     "colors": {
-        "primary": [174, 224, 255],
-        "background": [82, 72, 168],
-        "secondary": [105, 118, 250],
-        "tertiary": [221, 180, 255],
-        "fourth": [96, 213, 255]
+        "primary": [
+            174,
+            224,
+            255
+        ],
+        "background": [
+            82,
+            72,
+            168
+        ],
+        "secondary": [
+            105,
+            118,
+            250
+        ],
+        "tertiary": [
+            221,
+            180,
+            255
+        ],
+        "fourth": [
+            96,
+            213,
+            255
+        ]
     },
     "window": {
         "width": 600,
         "height": 800,
         "fps": 60
+    },
+    "gameplay": {
+        "volume": 0.75,
+        "difficulty": 70
     }
 }
-
