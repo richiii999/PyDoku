@@ -79,8 +79,14 @@ class Pydoku:
         self.title_font = pygame.font.SysFont("Arial", 64, bold=True)
         self.num_font = pygame.font.SysFont("Arial", 32)
         
+        # In game buttons
         self.back_btn = Button(20, 20, 100, 40, "Back", self.colors['primary'], (255, 255, 255))
         self.save_btn = Button(center_x, 500, btn_w, btn_h, "Save Settings", self.colors['primary'], (255,255,255))
+        side_btn_x = self.grid_offset_x + (9 * self.cell_size) + 30
+        self.check_btn = Button(side_btn_x, 250, 140, 50, "Check", self.colors['secondary'], (255, 255, 255))
+        self.save_game_btn = Button(side_btn_x, 320, 140, 50, "Save", self.colors['primary'], (255, 255, 255))
+        
+        self.show_errors = False
         
         # Updated Navigation Buttons
         self.play_btn = Button(center_x, 260, btn_w, btn_h, "New Game", self.colors['primary'], (255,255,255))
@@ -164,6 +170,9 @@ class Pydoku:
     def draw_game(self) -> None:
         self.screen.fill(self.colors['background'])
         self.back_btn.draw(self.screen)
+        
+        self.check_btn.draw(self.screen)
+        self.save_game_btn.draw(self.screen)
         
         for i in range(10):
             thick = 4 if i % 3 == 0 else 1
