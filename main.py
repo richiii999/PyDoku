@@ -270,6 +270,11 @@ class Pydoku:
             self.selected_cell = None
             return 
         
+        #saves game based on button click   
+        if self.save_game_btn.is_clicked(event):
+            if self.game:
+             self.game.SaveGame()
+
         if event.type == pygame.MOUSEBUTTONDOWN:
             x, y = event.pos
             col = (x - self.grid_offset_x) // self.cell_size

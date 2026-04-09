@@ -99,3 +99,8 @@ class SudokuGame:
         #actual update the session with timestamps and update it's completion status fo rthis object
         db.save_session(session_id, self.curr, self.time, self.notes)
         db.update_completion_status(sess_id,self.IsSolved())
+
+    def SaveGame(self):
+        #save current session to DB
+        print("Saving current game...") 
+        db.save_session(self.ID, self.curr, self.time, self.notes)
