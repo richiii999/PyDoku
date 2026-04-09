@@ -53,15 +53,9 @@ class db_function:
                 e=0
 
 
-<<<<<<< HEAD
             arr[j][e] = int(string_map[i])
             e+=1    
             
-=======
-            arr[j][e] = string_map[i]
-            e+=1
-
->>>>>>> 1428bce3bf2e3b67c1e6c17d62e682091e3b62a9
 
         return arr
     def array_to_string(array_map):
@@ -241,17 +235,10 @@ class db_function:
         result = engine.connect().execute(query).scalar()
 
         if result is None:
-<<<<<<< HEAD
             return None  
         
         notes_flat = json.loads(result)
         notes_3d = db_function.convert_1d_to_3d(notes_flat)
-=======
-            return None
-
-        notes_2d = json.loads(result)
-        notes_3d = db_function.convert_2d_to_3d(notes_2d)
->>>>>>> 1428bce3bf2e3b67c1e6c17d62e682091e3b62a9
 
         return notes_3d
 
@@ -298,7 +285,6 @@ class db_function:
     def add_session(id,sess_map,):
         MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
         conn = engine.connect()
-<<<<<<< HEAD
         
         sess_map_str = db_function.array_to_string(sess_map)
         query = db.select(db.func.max(MAP.c.session_id))
@@ -306,14 +292,6 @@ class db_function:
         new_id = map_ids  + 1 
         
         insert_query = MAP.insert().values(map_id=id,session_id = new_id, completion_status = 0,session_map=sess_map_str)
-=======
-
-        query = db.select(db.func.max(MAP.c.session_id))
-        map_ids = conn.execute(query).scalar()
-        new_id = map_ids  + 1
-
-        insert_query = MAP.insert().values(map_id=id,session_id = new_id, completion_status = 0,session_map=sess_map)
->>>>>>> 1428bce3bf2e3b67c1e6c17d62e682091e3b62a9
         conn.execute(insert_query)
         conn.commit()
 
@@ -400,20 +378,12 @@ class db_function:
 
         MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
         conn = engine.connect()
-<<<<<<< HEAD
         notes_flat = db_function.convert_3d_to_1d(notes)
         notes_json = json.dumps(notes_flat)
         session_map_str = db_function.array_to_string(new_session_map)
         ttimestamp = float(timestamp)
         
         query = db.update(MAP).where(MAP.c.session_id == sess_id).values(time_spent = ttimestamp, session_map = session_map_str, notes = notes_json)
-=======
-        notes_2d = db_function.convert_3d_to_2d(notes)
-        notes_json = json.dumps(notes_2d)
-        ttimestamp = float(timestamp)
-
-        query = db.update(MAP).where(MAP.c.session_id == sess_id).values(time_spent = ttimestamp, session_map = new_session_map,notes = notes_json)
->>>>>>> 1428bce3bf2e3b67c1e6c17d62e682091e3b62a9
         conn.execute(query)
         conn.commit()
 
