@@ -5,7 +5,7 @@
 ###make the save to db functions in game still fix the 3d matrix issues
 
 import sqlalchemy as db
-import json 
+import json
 
 engine = engine = db.create_engine('sqlite:///database/pydoku.db')
 
@@ -14,7 +14,7 @@ class db_function:
 # converter functions
     def convert_3d_to_2d(matrix):
         return [row for layer in matrix for row in layer]
-    
+
     def convert_2d_to_3d(matrix_2d):
         return [
             matrix_2d[i:i + 9]
@@ -39,15 +39,15 @@ class db_function:
             if(i%9==0 and i != 0):
                 j+=1
                 e=0
-                
+
 
             arr[j][e] = string_map[i]
             e+=1
-            
+
 
         return arr
     def array_to_string(array_map):
-        new_string = '' 
+        new_string = ''
 
         for i in range(9):
             for j in range(9):
@@ -55,24 +55,18 @@ class db_function:
 
         return new_string
 
-    
+
 
     ####################### fetch functions
 
     def ID_exists(id) -> bool:
         '''Returns T/F if an entry with ID exists'''
         MAP = db.Table('MAP', db.MetaData(), autoload_with=engine)
- 
+
         query = db.select(MAP.c.map_id).where(MAP.c.map_id == id)
         result = engine.connect().execute(query).fetchall()
-        # TODO:
-        # Connect to DB
-        # Query = select on ID
-        # Check if there is a result
-        # Convert to bool (true = there is a result, false = no result)
-        # Return bool
-        if(result == None): return False
-        else: return True
+
+        return (result != None)
 
 
     #### from table map
@@ -125,8 +119,8 @@ class db_function:
 
         print(result)
         return result
-    
-        
+
+
     def get_difficulty(id):
         MAP = db.Table('MAP', db.MetaData(), autoload_with=engine)
 
@@ -146,7 +140,7 @@ class db_function:
 
         result = engine.connect().execute(query).fetchall()
 
-    
+
         return result
 
 
@@ -159,7 +153,7 @@ class db_function:
 
         result = engine.connect().execute(query).fetchall()
         return result
-    
+
     def get_session_and_status():
         MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
 
@@ -167,7 +161,7 @@ class db_function:
 
         result = engine.connect().execute(query).fetchall()
         return result
-    
+
     def get_all_sessions_ids():
         MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
 
@@ -192,8 +186,8 @@ class db_function:
         result = engine.connect().execute(query).fetchall()
 
         return result
-    
-    
+
+
     def get_all_sessions():
         MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
 
@@ -202,7 +196,7 @@ class db_function:
         result = engine.connect().execute(query).fetchall()
 
         return result
-    
+
 
     def get_completion_time(id):
         MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
@@ -229,13 +223,13 @@ class db_function:
         result = engine.connect().execute(query).scalar()
 
         if result is None:
-            return None  
-        
+            return None
+
         notes_2d = json.loads(result)
         notes_3d = db_function.convert_2d_to_3d(notes_2d)
 
         return notes_3d
-    
+
     def get_num_errors(id):
         MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
 
@@ -248,12 +242,12 @@ class db_function:
 
     ############# insert rows into  tables
 
-    
-    
+
+
     def add_solution(id,solution_string):
         MAP = db.Table('MAP_SOLUTIONS', db.MetaData(), autoload_with=engine)
         conn = engine.connect()
-        
+
         insert_query = MAP.insert().values(map_id=id,map_solution = solution_string)
         conn.execute(insert_query)
         conn.commit()
@@ -261,10 +255,10 @@ class db_function:
     def add_new_map(map_array,solution_array,diffi):
         MAP = db.Table('MAP', db.MetaData(), autoload_with=engine)
         conn = engine.connect()
-        
+
         query = db.select(db.func.max(MAP.c.map_id))
         map_ids = conn.execute(query).scalar()
-        new_id = map_ids  + 1 
+        new_id = map_ids  + 1
         map_array = db_function.array_to_string(map_array)
         solution_array = db_function.array_to_string(solution_array)
 
@@ -274,16 +268,16 @@ class db_function:
         db_function.add_solution(new_id,solution_array)
 
         return new_id
-    
+
 
     def add_session(id,sess_map,):
         MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
         conn = engine.connect()
-        
+
         query = db.select(db.func.max(MAP.c.session_id))
         map_ids = conn.execute(query).scalar()
-        new_id = map_ids  + 1 
-        
+        new_id = map_ids  + 1
+
         insert_query = MAP.insert().values(map_id=id,session_id = new_id, completion_status = 0,session_map=sess_map)
         conn.execute(insert_query)
         conn.commit()
@@ -292,43 +286,43 @@ class db_function:
     def delete_map(id):
         MAP = db.Table('MAP', db.MetaData(), autoload_with=engine)
         conn = engine.connect()
-        
+
         query = MAP.delete().where(MAP.c.map_id == id)
 
         conn.execute(query)
         conn.commit()
-        
+
         db_function.delete_solution(id)
-       
-    
+
+
     def delete_solution(id):
         MAP = db.Table('MAP_SOLUTIONS', db.MetaData(), autoload_with=engine)
         conn = engine.connect()
-        
+
         query = MAP.delete().where(MAP.c.map_id == id)
 
         conn.execute(query)
         conn.commit()
 
-  
+
     def delete_session(id):
         MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
-        
+
         conn = engine.connect()
-        
+
         query = MAP.delete().where(MAP.c.session_id == id)
 
         conn.execute(query)
         conn.commit()
 
     ############### update into tables
-    #update the map 
+    #update the map
 
     def update_difficulty(diffi,id):
         MAP = db.Table('MAP', db.MetaData(), autoload_with=engine)
         conn = engine.connect()
 
-        
+
         query = db.update(MAP).where(MAP.c.map_id == id).values(difficulty = diffi)
         conn.execute(query)
         conn.commit()
@@ -340,7 +334,7 @@ class db_function:
         query = db.select(db.func.max(MAP.c.completed_howmanytimes))
         nbruh = conn.execute(query).scalar()
         if(nbruh):
-            newval = int(nbruh) +1 
+            newval = int(nbruh) +1
         else:
             newval = 1 # > ; P
 
@@ -353,10 +347,10 @@ class db_function:
     def update_notes(note):
         MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
         conn = engine.connect()
-        
+
         notes = db_function.convert_3d_to_2d(note)
         notes_json = json.dumps(notes)
-        
+
         query = db.update(MAP).where(MAP.c.session_id == 1).values(notes = notes_json)
         conn.execute(query)
         conn.commit()
@@ -367,9 +361,9 @@ class db_function:
         MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
         conn = engine.connect()
         notes_2d = db_function.convert_3d_to_2d(notes)
-        notes_json = json.dumps(notes_2d) 
+        notes_json = json.dumps(notes_2d)
         ttimestamp = float(timestamp)
-        
+
         query = db.update(MAP).where(MAP.c.session_id == sess_id).values(time_spent = ttimestamp, session_map = new_session_map,notes = notes_json)
         conn.execute(query)
         conn.commit()
@@ -379,7 +373,7 @@ class db_function:
         MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
         conn = engine.connect()
         ttimestamp = float(time)
-        
+
         query = db.update(MAP).where(MAP.c.session_id == sess_id).values(time_spent = ttimestamp)
         conn.execute(query)
         conn.commit()
@@ -395,13 +389,13 @@ class db_function:
         conn.execute(query)
         conn.commit()
 
-    
+
 
     def update_num_errors(newerror,ses_id):
         MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
         conn = engine.connect()
 
-        
+
         query = db.update(MAP).where(MAP.c.session_id == ses_id).values(num_errors = newerror)
         conn.execute(query)
         conn.commit()
