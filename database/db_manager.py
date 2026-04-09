@@ -360,13 +360,8 @@ class db_function:
     def update_notes(note):
         MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
         conn = engine.connect()
-<<<<<<< HEAD
         
         notes = db_function.convert_3d_to_1d(note)
-=======
-
-        notes = db_function.convert_3d_to_2d(note)
->>>>>>> 1428bce3bf2e3b67c1e6c17d62e682091e3b62a9
         notes_json = json.dumps(notes)
 
         query = db.update(MAP).where(MAP.c.session_id == 1).values(notes = notes_json)
