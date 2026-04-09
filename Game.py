@@ -33,8 +33,8 @@ class SudokuGame:
             self.ID = ID  # Loading a previous game, session already exists
         else:
             map_id = db.add_new_map(self.initial, self.solution, self.difficulty)
-            db.add_session(map_id, self.curr)  # Create the session row
-            # Get the new session id that was just created
+            db.add_session(map_id, self.curr)  # create the session row
+            # get the new session id that was just created
             self.ID = db.get_all_sessions_ids()[-1][0]
 
     def prettyPrint(self, grid=None, wall='|', floor='-', empty='.', info=False) -> None:
