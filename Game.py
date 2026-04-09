@@ -29,7 +29,6 @@ class SudokuGame:
         self.numNotes    = numNotes    # Num notes added
         self.difficulty  = difficulty  # Num empty squares started with
 
-<<<<<<< HEAD
         print(f"Sol=\n{self.solution}")
         if ID != 0:
             self.ID = ID  # Loading a previous game, session already exists
@@ -38,10 +37,7 @@ class SudokuGame:
             db.add_session(map_id, self.curr)  # create the session row
             # get the new session id that was just created
             self.ID = db.get_all_sessions_ids()[-1][0]
-=======
-        # Uses given ID if set, otherwise generates a new ID for this map and adds it to the db
-        self.ID = ID if (ID != 0) else db.add_new_map(self.initial, self.solution, self.difficulty)
->>>>>>> 1428bce3bf2e3b67c1e6c17d62e682091e3b62a9
+
 
         # Debug print the solution
         print("   --- SOLUTION ---")
