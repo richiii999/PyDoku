@@ -61,14 +61,19 @@ class db_function:
 
     def ID_exists(id) -> bool:
         '''Returns T/F if an entry with ID exists'''
+        MAP = db.Table('MAP', db.MetaData(), autoload_with=engine)
+ 
+        query = db.select(MAP.c.map_id).where(MAP.c.map_id == id)
+        result = engine.connect().execute(query).fetchall()
         # TODO:
         # Connect to DB
         # Query = select on ID
         # Check if there is a result
         # Convert to bool (true = there is a result, false = no result)
         # Return bool
+        if(result == None): return False
+        else: return True
 
-        return False # TODO
 
     #### from table map
     def get_all_map_and_id():
