@@ -119,7 +119,9 @@ class Pydoku:
         # Loop forever
         pygame.mixer.music.play(-1)  
         
-        
+        #win button
+        self.win_btn = Button(center_x, 400, btn_w, btn_h, "Back to Menu", self.colors['primary'], (255,255,255))
+
     def load_settings(self) -> None:
         with open('settings.json', 'r') as f:
             data = json.load(f)
@@ -193,7 +195,15 @@ class Pydoku:
             for c in range(9):
                 val = self.game.curr[r][c]
                 if val != 0:
-                    color = (0, 0, 0) if self.game.initial[r][c] != 0 else self.colors['secondary']
+                    if self.game.initial[r][c] != 0:
+                        # Original tile = black
+                        color = (0, 0, 0)  
+                    elif self.show_errors and val != self.game.solution[r][c]:
+                        # Wrong = red
+                        color = (255, 0, 0)  
+                    else:
+                        # User placed = normal color
+                        color = self.colors['secondary']  
                     num_surf = self.num_font.render(str(val), True, color)
                     num_rect = num_surf.get_rect(center=(self.grid_offset_x + c * self.cell_size + self.cell_size//2, 
                                                         self.grid_offset_y + r * self.cell_size + self.cell_size//2))
@@ -215,6 +225,13 @@ class Pydoku:
         self.diff_slider.draw(self.screen)
         self.save_btn.draw(self.screen)
 
+    def draw_win(self) -> None:
+        #put the win button on the screen when someone wins 
+        self.screen.fill(self.colors['background'])
+        title_surf = self.title_font.render("You Win!", True, self.colors['primary'])
+        self.screen.blit(title_surf, title_surf.get_rect(center=(self.width // 2, 200)))
+        self.win_btn.draw(self.screen)
+
     def run(self) -> None:
         while self.running:
             for event in pygame.event.get():
@@ -229,6 +246,9 @@ class Pydoku:
                     self.handle_stats_events(event)
                 elif self.state == "OPTIONS":
                     self.handle_options_events(event)
+                #helper call to print to screen
+                elif self.state == "WIN":
+                    self.handle_win_events(event)    
 
             if self.state == "HOME":
                 self.draw_home()
@@ -238,6 +258,9 @@ class Pydoku:
                 self.draw_stats()
             elif self.state == "OPTIONS":
                 self.draw_options()
+            #draws the button    
+            elif self.state == "WIN":
+                self.draw_win()    
 
             pygame.display.flip()
             self.clock.tick(self.fps)
@@ -251,8 +274,6 @@ class Pydoku:
         elif self.prev_btn.is_clicked(event):
             #load prev game
             saved = db.load_prev_game()
-            if saved:
-                print(saved["curr"])
             #retrieve game info 
             if saved:
                 self.game = SudokuGame(
@@ -294,6 +315,10 @@ class Pydoku:
             if self.game:
              self.game.SaveGame()
 
+        #prints out what errors you made
+        if self.check_btn.is_clicked(event):
+            if self.game:
+                self.show_errors = True
         if event.type == pygame.MOUSEBUTTONDOWN:
             x, y = event.pos
             col = (x - self.grid_offset_x) // self.cell_size
@@ -303,7 +328,12 @@ class Pydoku:
         if event.type == pygame.KEYDOWN and self.selected_cell:
             r, c = self.selected_cell
             if pygame.K_1 <= event.key <= pygame.K_9:
+                #reset our errors for new board 
+                self.show_errors = False 
                 self.game.PlaceTile(r, c, event.key - pygame.K_0)
+                #check if they won
+                if self.game.IsSolved():       
+                    self.state = "WIN"
             elif event.key == pygame.K_BACKSPACE or event.key == pygame.K_0:
                 self.game.curr[r][c] = 0 
 
@@ -334,6 +364,12 @@ class Pydoku:
         if self.save_btn.is_clicked(event):
             self.save_settings()
  
+    def handle_win_events(self, event) -> None:
+        #handler function to help us set game state and current board 
+        if self.win_btn.is_clicked(event):
+            self.state = "HOME"
+            self.game = None
+
 if __name__ == "__main__":
     app = Pydoku()
     app.run()
