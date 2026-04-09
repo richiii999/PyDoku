@@ -9,11 +9,16 @@ from database.db_manager import db_function as db
 
 class SudokuGame:
     def __init__(self, initial=None, curr=None, solution=None, notes=None, time=0, numMistakes=0, numNotes=0, difficulty=40, RNG=None, ID=0):
-        # Board states
-        states = Generator.GenerateSudokuSet(difficulty, RNG=RNG)
-        self.initial  =  initial  if (initial  is not None) else deepcopy(states[0]) # Initial values cannot be changed
-        self.curr     =  curr     if (curr     is not None) else deepcopy(states[0]) # At the start, curr is just initial
-        self.solution =  solution if (solution is not None) else deepcopy(states[1]) # Solution to check mistakes against
+        # Board states - generate only if not loading 
+        if initial is None or solution is None:
+            states = Generator.GenerateSudokuSet(difficulty, RNG=RNG)
+            self.initial = deepcopy(states[0])  # Initial values cannot be changed
+            self.solution = deepcopy(states[1]) # Solution to check mistakes against
+        else:
+            self.initial = deepcopy(initial)
+            self.solution = deepcopy(solution)
+        
+        self.curr = deepcopy(self.initial) if curr is None else deepcopy(curr) # At the start, curr is just initial    
 
         self.notes = notes if (notes is not None) else np.zeros((9,9,9), dtype='int') # 3D Grid of 0's
 
@@ -24,7 +29,13 @@ class SudokuGame:
         self.difficulty  = difficulty  # Num empty squares started with
 
         print(f"Sol=\n{self.solution}")
-        self.ID = ID if (ID != 0) else db.add_new_map(self.initial, self.solution, self.difficulty)
+        if ID != 0:
+            self.ID = ID  # Loading a previous game, session already exists
+        else:
+            map_id = db.add_new_map(self.initial, self.solution, self.difficulty)
+            db.add_session(map_id, self.curr)  # Create the session row
+            # Get the new session id that was just created
+            self.ID = db.get_all_sessions_ids()[-1][0]
 
     def prettyPrint(self, grid=None, wall='|', floor='-', empty='.', info=False) -> None:
         """Prints the full Sudoku board with formatting"""

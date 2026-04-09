@@ -12,14 +12,26 @@ engine = engine = db.create_engine('sqlite:///database/pydoku.db')
 class db_function:
 
 # converter functions
-    def convert_3d_to_2d(matrix):
-        return [row for layer in matrix for row in layer]
+    def convert_3d_to_1d(matrix):
+        flat_matrix = []
+        #loop through the matrix and store it to a 1D list     
+        for row in range(9):
+            for column in range(9):
+                for n in range(9):
+                    flat_matrix.append(int(matrix[row][column][n]))
+        return flat_matrix
     
-    def convert_2d_to_3d(matrix_2d):
-        return [
-            matrix_2d[i:i + 9]
-            for i in range(0, len(matrix_2d), 9)
-        ]
+    def convert_1d_to_3d(flat_matrix):
+        matrix = [[[0 for _ in range(9)] for _ in range(9)] for _ in range(9)]
+        i = 0
+        #loop through the flat list and add the values to our 3D matrix  
+        for row in range(9):
+            for column in range(9):
+                for n in range(9):
+                    matrix[row][column][n] = flat_matrix[i]
+                    i += 1
+        return matrix 
+                   
     def string_to_array(string_map):
         arr = [
         [0,0,0,0,0,0,0,0,0],
@@ -41,8 +53,8 @@ class db_function:
                 e=0
                 
 
-            arr[j][e] = string_map[i]
-            e+=1
+            arr[j][e] = int(string_map[i])
+            e+=1    
             
 
         return arr
@@ -231,8 +243,8 @@ class db_function:
         if result is None:
             return None  
         
-        notes_2d = json.loads(result)
-        notes_3d = db_function.convert_2d_to_3d(notes_2d)
+        notes_flat = json.loads(result)
+        notes_3d = db_function.convert_1d_to_3d(notes_flat)
 
         return notes_3d
     
@@ -280,11 +292,12 @@ class db_function:
         MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
         conn = engine.connect()
         
+        sess_map_str = db_function.array_to_string(sess_map)
         query = db.select(db.func.max(MAP.c.session_id))
         map_ids = conn.execute(query).scalar()
         new_id = map_ids  + 1 
         
-        insert_query = MAP.insert().values(map_id=id,session_id = new_id, completion_status = 0,session_map=sess_map)
+        insert_query = MAP.insert().values(map_id=id,session_id = new_id, completion_status = 0,session_map=sess_map_str)
         conn.execute(insert_query)
         conn.commit()
 
@@ -354,7 +367,7 @@ class db_function:
         MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
         conn = engine.connect()
         
-        notes = db_function.convert_3d_to_2d(note)
+        notes = db_function.convert_3d_to_1d(note)
         notes_json = json.dumps(notes)
         
         query = db.update(MAP).where(MAP.c.session_id == 1).values(notes = notes_json)
@@ -362,15 +375,16 @@ class db_function:
         conn.commit()
 
     def save_session(sess_id, new_session_map, timestamp, notes):
-        #needed is converting the 3d matrix(notes) into a 2d one and saving to the column sesion_notes
+        #converted session map to str 
 
         MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
         conn = engine.connect()
-        notes_2d = db_function.convert_3d_to_2d(notes)
-        notes_json = json.dumps(notes_2d) 
+        notes_flat = db_function.convert_3d_to_1d(notes)
+        notes_json = json.dumps(notes_flat)
+        session_map_str = db_function.array_to_string(new_session_map)
         ttimestamp = float(timestamp)
         
-        query = db.update(MAP).where(MAP.c.session_id == sess_id).values(time_spent = ttimestamp, session_map = new_session_map,notes = notes_json)
+        query = db.update(MAP).where(MAP.c.session_id == sess_id).values(time_spent = ttimestamp, session_map = session_map_str, notes = notes_json)
         conn.execute(query)
         conn.commit()
 
@@ -406,3 +420,51 @@ class db_function:
         conn.execute(query)
         conn.commit()
 
+    def load_prev_game():
+        SESSION = db.Table('SESSION', db.MetaData(), autoload_with= engine)
+        MAP = db.Table('MAP', db.MetaData(), autoload_with= engine)
+        SOL = db.Table('MAP_SOLUTIONS', db.MetaData(), autoload_with= engine)
+        conn = engine.connect()
+
+        #try to get the last incomplete game
+        query = db.select(SESSION).where(SESSION.c.completion_status == 0).order_by(SESSION.c.session_id.desc())
+        result = conn.execute(query).fetchone()
+
+        #if theres none, get the last one completed
+        if not result:
+            query = db.select(SESSION).order_by(SESSION.c.session_id.desc())
+            result = conn.execute(query).fetchone()
+
+        #if neither exists, return none
+        if not result:
+           return None  
+
+        session_id = result.session_id
+        map_id = result.map_id
+
+        #get the map and its solution
+        map_query = db.select(MAP.c.map).where(MAP.c.map_id == map_id)
+        sol_query = db.select(SOL.c.map_solution).where(SOL.c.map_id == map_id)
+
+        map_str = conn.execute(map_query).scalar()
+        sol_str = conn.execute(sol_query).scalar()
+
+        #convert everything
+        curr = db_function.string_to_array(result.session_map)
+        initial = db_function.string_to_array(map_str)
+        solution = db_function.string_to_array(sol_str)
+
+        notes = None
+        if result.notes:
+            notes_flat = json.loads(result.notes)
+            notes = db_function.convert_1d_to_3d(notes_flat)
+
+        return {
+            "session_id": session_id,
+            "initial": initial,
+            "curr": curr,
+            "solution": solution,
+            "notes": notes,
+            "time": result.time_spent if result.time_spent is not None else 0.0,
+            "difficulty": db_function.get_difficulty(map_id)
+        }     

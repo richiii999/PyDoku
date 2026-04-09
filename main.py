@@ -3,6 +3,7 @@ import json
 import sys
 import multiprocessing
 import Stats  # To access graphing functions
+from database.db_manager import db_function as db #need db access
 from Game import SudokuGame
 
 class Button:
@@ -200,7 +201,7 @@ class Pydoku:
 
         # Get the current time and seperate it into minute/seconds     
         elapsed_time = self.game.time
-        mins, secs = divmod(elapsed_time, 60)
+        mins, secs = divmod(int(elapsed_time), 60)
         # Create the actual shape and render to the screen 
         time_str = f"{mins:02d}:{secs:02d}"
         time_surf = self.timer_font.render(time_str, True, self.colors['primary'])
@@ -248,7 +249,25 @@ class Pydoku:
             self.game = SudokuGame(difficulty=self.difficulty)
             self.state = "GAME"
         elif self.prev_btn.is_clicked(event):
-            print("Loading Previous_game")
+            #load prev game
+            saved = db.load_prev_game()
+            if saved:
+                print(saved["curr"])
+            #retrieve game info 
+            if saved:
+                self.game = SudokuGame(
+                    initial=saved["initial"],
+                    curr=saved["curr"],
+                    solution=saved["solution"],
+                    notes=saved["notes"],
+                    time=saved["time"],
+                    difficulty=saved["difficulty"],
+                    ID=saved["session_id"]
+                )
+                self.state = "GAME"
+            #if no game, print no prev game     
+            else:
+                print("No previous game found.")
         elif self.stats_btn.is_clicked(event):
             self.state = "STATS"
         elif self.opts_btn.is_clicked(event):
