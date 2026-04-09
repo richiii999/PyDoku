@@ -1,10 +1,11 @@
 
-# Game.py
+### Game.py
 # Stores the current game state and has functions to play the game
 
-import Generator # Generate Sudoku initial and solution states
 from copy import deepcopy # Deepcopy the board since its nested lists
 import numpy as np # Multi-dim arrays easily
+
+import Generator # Generate Sudoku initial and solution states
 from database.db_manager import db_function as db
 
 class SudokuGame:
@@ -28,6 +29,7 @@ class SudokuGame:
         self.numNotes    = numNotes    # Num notes added
         self.difficulty  = difficulty  # Num empty squares started with
 
+<<<<<<< HEAD
         print(f"Sol=\n{self.solution}")
         if ID != 0:
             self.ID = ID  # Loading a previous game, session already exists
@@ -36,18 +38,26 @@ class SudokuGame:
             db.add_session(map_id, self.curr)  # create the session row
             # get the new session id that was just created
             self.ID = db.get_all_sessions_ids()[-1][0]
+=======
+        # Uses given ID if set, otherwise generates a new ID for this map and adds it to the db
+        self.ID = ID if (ID != 0) else db.add_new_map(self.initial, self.solution, self.difficulty)
+>>>>>>> 1428bce3bf2e3b67c1e6c17d62e682091e3b62a9
 
-    def prettyPrint(self, grid=None, wall='|', floor='-', empty='.', info=False) -> None:
-        """Prints the full Sudoku board with formatting"""
+        # Debug print the solution
+        print("   --- SOLUTION ---")
+        self.prettyPrint(self.solution, showMetadata=True)
+
+    def prettyPrint(self, grid=None, wall='|', floor='-', empty='.', showMetadata=False) -> None:
+        """Prints the Sudoku board with formatting"""
         if grid is None: grid = self.curr
 
-        for row in grid:
-            if grid.index(row) != 0 and grid.index(row) % 3 == 0: print(f"{floor * 21}") # Horz separator
+        for row in grid: # Print each row of numbers with separators: 1 2 3 | 4 5 6 | 7 8 9
+            if grid.index(row) != 0 and grid.index(row) % 3 == 0: print(f"{floor * 21}") # Horz separator every 3 lines
             txtRow = [N if N != 0 else empty for N in row]
             print(f"{txtRow[0]} {txtRow[1]} {txtRow[2]} {wall} {txtRow[3]} {txtRow[4]} {txtRow[5]} {wall} {txtRow[6]} {txtRow[7]} {txtRow[8]}")
 
-        if info:
-            print(f"Mistakes={self.numMistakes}, Notes={self.numNotes}\n")
+        if showMetadata: # Optionally show the metadata for the game
+            print(f"ID={self.ID}, Time={self.time}, Difficulty={self.difficulty}\nMistakes={self.numMistakes}, Notes={self.numNotes}\n")
 
     def PlaceTile(self, row, col, val) -> None:
         """Attempts to place val at [row][col]"""
@@ -72,6 +82,7 @@ class SudokuGame:
 
         self.curr[row][col] = val
 
+        # Automatically submit finished game upon placing the last tile
         if self.IsSolved(): self.SubmitToDB(self.ID)
 
 
@@ -90,7 +101,7 @@ class SudokuGame:
             print("Duplicate, removing note")
             self.notes[row][col][val-1] = 0
 
-        else:
+        else: # Note is valid
             self.notes[row][col][val-1] = val
             self.numNotes += 1
 
@@ -99,19 +110,19 @@ class SudokuGame:
         return self.curr == self.solution
 
     def SubmitToDB(self, session_id) -> None:
+        """Submits the game's state to the DB, adding a new entry if needed"""
         sess_id = session_id
 
-        if not db.ID_exists(sess_id):
-           #adding new rows if created a new map
+        if not db.ID_exists(sess_id): # If new game, create a new db entry
            new_id =  db.add_new_map(self.initial,self.solution,self.difficulty)
            sess_id = db.add_session(new_id,self.curr)
-        
 
-        #actual update the session with timestamps and update it's completion status fo rthis object
+
+        # Update the session with curr timestamp & completion status
         db.save_session(session_id, self.curr, self.time, self.notes)
         db.update_completion_status(sess_id,self.IsSolved())
 
-    def SaveGame(self):
-        #save current session to DB
-        print("Saving current game...") 
+    def SaveGame(self) -> None:
+        """Interface for db.save_session()"""
+        print("Saving current game...")
         db.save_session(self.ID, self.curr, self.time, self.notes)
