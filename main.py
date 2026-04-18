@@ -88,6 +88,7 @@ class Pydoku:
         
         btn_w, btn_h = 240, 60
         center_x = (self.width // 2) - (btn_w // 2)
+        self.scroll_y = 0
         
         self.title_font = pygame.font.SysFont("Arial", 64, bold=True)
         self.num_font = pygame.font.SysFont("Arial", 32)
@@ -292,20 +293,28 @@ class Pydoku:
         
         # SHow previous games
         for i, selection, in enumerate(self.session_list): # Go through all game from database
-            y_pos = 150 + (i * 50)
-            session_info = f"ID {str(selection.session_id)} | MAP {str(selection.map_id)} | TIME {str(selection.time_spent)} s"
+            y_pos = 150 + (i * 50) + self.scroll_y
             
-            # Choose block color
-            if selection.completion_status == False:
-                color = (255, 255, 255)
-            else:
-                color = (150, 150, 150)
+            if y_pos > 100 and y_pos < self.height + 50:
+                # Choose block color
+                if selection.completion_status == False:
+                    color = (255, 255, 255)
+                    status_indicator = "Not Compelete"
+                else:
+                    color = (150, 150, 150)
+                    status_indicator = "Complete"
+                session_info = f"ID {str(selection.session_id)} | MAP {str(selection.map_id)} | STATUS {status_indicator}"
                 
-            btn_txt = self.num_font.render(session_info, True, color)
-            rect = btn_txt.get_rect(center=(self.width // 2, y_pos))
-            self.screen.blit(btn_txt, rect)
+                
+                btn_txt = self.num_font.render(session_info, True, color)
+                rect = btn_txt.get_rect(center=(self.width // 2, y_pos))
+                self.screen.blit(btn_txt, rect)
 
-    
+        pygame.draw.rect(self.screen, self.colors['background'], (0, 0, self.width, 130))
+        title = self.title_font.render("Choose Game!", True, self.colors['primary'])
+        self.screen.blit(title, title.get_rect(center=(self.width // 2, 80)))
+        self.back_btn.draw(self.screen)
+        
     def run(self) -> None:
         while self.running:
             for event in pygame.event.get():
@@ -435,8 +444,21 @@ class Pydoku:
     
     def handle_selection_event(self, event) -> None:
         """ Handle events in the selection screen """
+        
+        # Handle Back Button
         if self.back_btn.is_clicked(event):
             self.state = "HOME"
+        
+        # Allow to scroll down
+        if event.type == pygame.MOUSEWHEEL:
+            self.scroll_y += event.y * 25
+            self.scroll_y = min(0, self.scroll_y)
+            height = len(self.session_list) * 50
+            if (height > (self.height - 150)):
+                self.scroll_y = max(self.scroll_y, -(height - (self.height - 200)))
+                
+        # Press Events
+
         
         
 if __name__ == "__main__":
