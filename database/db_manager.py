@@ -7,10 +7,22 @@
 import sqlalchemy as db
 import json
 
+import logging
+
 engine = engine = db.create_engine('sqlite:///database/pydoku.db')
 
-class db_function:
 
+logging.basicConfig(
+    level=logging.INFO,
+    filename='pydoku.log',
+    filemode='a',
+    format='%(asctime)s | %(name)-15s | %(levelname)-8s | %(message)s',
+    datefmt='%H:%M:%S',
+)
+
+logger = logging.getLogger(f"{__name__}")
+
+class db_function:
 # converter functions
     def convert_3d_to_1d(matrix):
         flat_matrix = []
@@ -58,6 +70,7 @@ class db_function:
             
 
         return arr
+    
     def array_to_string(array_map):
         new_string = ''
 
@@ -67,10 +80,7 @@ class db_function:
 
         return new_string
 
-
-
     ####################### fetch functions
-
     def ID_exists(id) -> bool:
         '''Returns T/F if an entry with ID exists'''
         MAP = db.Table('MAP', db.MetaData(), autoload_with=engine)
@@ -79,7 +89,6 @@ class db_function:
         result = engine.connect().execute(query).fetchall()
 
         return (result != None)
-
 
     #### from table map
     def get_all_map_and_id():
@@ -105,8 +114,6 @@ class db_function:
         result= engine.connect().execute(query).fetchall()
         return result
 
-
-
     def get_map_and_id(id):
         MAP = db.Table('MAP', db.MetaData(), autoload_with=engine)
 
@@ -121,7 +128,6 @@ class db_function:
         '''
         return result
 
-
     def get_completed_howmanytimes(id):
         MAP = db.Table('MAP', db.MetaData(), autoload_with=engine)
 
@@ -132,7 +138,6 @@ class db_function:
         print(result)
         return result
 
-
     def get_difficulty(id):
         MAP = db.Table('MAP', db.MetaData(), autoload_with=engine)
 
@@ -141,8 +146,6 @@ class db_function:
         result = engine.connect().execute(query).scalar()
 
         return result
-
-
 
     ########## MAP SOLUTIONS ARE HERE
     def get_solution_and_id(id):
@@ -154,7 +157,6 @@ class db_function:
 
 
         return result
-
 
     ###########FUNCTIONS FOR THE SESSION ARE HERE
 
@@ -199,7 +201,6 @@ class db_function:
 
         return result
 
-
     def get_all_sessions():
         MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
 
@@ -208,7 +209,6 @@ class db_function:
         result = engine.connect().execute(query).fetchall()
 
         return result
-
 
     def get_completion_time(id):
         MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
@@ -227,6 +227,7 @@ class db_function:
         result = engine.connect().execute(query).scalar()
 
         return result
+
     def get_notes(id):
         MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
 
@@ -251,10 +252,7 @@ class db_function:
 
         return result
 
-
     ############# insert rows into  tables
-
-
 
     def add_solution(id,solution_string):
         MAP = db.Table('MAP_SOLUTIONS', db.MetaData(), autoload_with=engine)
@@ -281,7 +279,6 @@ class db_function:
 
         return new_id
 
-
     def add_session(id,sess_map,):
         MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
         conn = engine.connect()
@@ -307,7 +304,6 @@ class db_function:
 
         db_function.delete_solution(id)
 
-
     def delete_solution(id):
         MAP = db.Table('MAP_SOLUTIONS', db.MetaData(), autoload_with=engine)
         conn = engine.connect()
@@ -316,7 +312,6 @@ class db_function:
 
         conn.execute(query)
         conn.commit()
-
 
     def delete_session(id):
         MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)
@@ -354,7 +349,6 @@ class db_function:
         query = db.update(MAP).where(MAP.c.map_id == id).values(completed_howmanytimes=newval)
         conn.execute(query)
         conn.commit()
-
 
     #update values in session
     def update_notes(note):
@@ -402,8 +396,6 @@ class db_function:
             query = db.update(MAP).where(MAP.c.session_id == ses_id).values(completion_status = 1)
         conn.execute(query)
         conn.commit()
-
-
 
     def update_num_errors(newerror,ses_id):
         MAP = db.Table('SESSION', db.MetaData(), autoload_with=engine)

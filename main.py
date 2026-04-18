@@ -4,7 +4,7 @@ import sys
 import multiprocessing
 import Stats  # To access graphing functions
 from database.db_manager import db_function as db #need db access
-from Game import SudokuGame # The actual game logic.
+from Game import SudokuGame # The actual game logic.    
 import logging
 
 logging.basicConfig(
@@ -14,8 +14,6 @@ logging.basicConfig(
     format='%(asctime)s | %(name)-15s | %(levelname)-8s | %(message)s',
     datefmt='%H:%M:%S',
 )
-
-logger = logging.getLogger("Main")
 
 class Button:
     def __init__(self, x, y, w, h, text, color, text_color):
@@ -68,7 +66,7 @@ class Slider:
 
 class Pydoku:
     def __init__(self) -> None:
-        self.logger = logging.getLogger("Pydoku")
+        self.logger = logging.getLogger(f"{self.__class__.__name__}")
         pygame.init()
         self.logger.info("Initiated Pygame")
         self.load_settings()
@@ -340,7 +338,7 @@ class Pydoku:
                 self.state = "GAME"
             #if no game, print no prev game     
             else:
-                print("No previous game found.")
+                self.logger.warning("No previous game found.")
         elif self.stats_btn.is_clicked(event):
             self.state = "STATS"
         elif self.opts_btn.is_clicked(event):

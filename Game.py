@@ -8,8 +8,22 @@ import numpy as np # Multi-dim arrays easily
 import Generator # Generate Sudoku initial and solution states
 from database.db_manager import db_function as db
 
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    filename='pydoku.log',
+    filemode='a',
+    format='%(asctime)s | %(name)-15s | %(levelname)-8s | %(message)s',
+    datefmt='%H:%M:%S',
+)
+
+logger = logging.getLogger(__name__)
+
 class SudokuGame:
     def __init__(self, initial=None, curr=None, solution=None, notes=None, time=0, numMistakes=0, numNotes=0, difficulty=40, RNG=None, ID=0):
+        self.logger = logging.getLogger(f"{self.__class__.__name__}")
+        
         # Board states - generate only if not loading 
         if initial is None or solution is None:
             states = Generator.GenerateSudokuSet(difficulty, RNG=RNG)
@@ -29,7 +43,7 @@ class SudokuGame:
         self.numNotes    = numNotes    # Num notes added
         self.difficulty  = difficulty  # Num empty squares started with
 
-        print(f"Sol=\n{self.solution}")
+        self.logger.info(f"Sol=\n{self.solution}")
         if ID != 0:
             self.ID = ID  # Loading a previous game, session already exists
         else:
@@ -81,20 +95,19 @@ class SudokuGame:
         # Automatically submit finished game upon placing the last tile
         if self.IsSolved(): self.SubmitToDB(self.ID)
 
-
     def AddNote(self, row, col, val) -> None:
         """Attempts to place val at [row][col]"""
         if row < 0 or row > 8: raise ValueError("Invalid row")
         if col < 0 or col > 8: raise ValueError("Invalid col")
         if val < 1 or val > 9: raise ValueError("Invalid val")
 
-        print(f"Noting {val} @ {row},{col}")
+        self.logger.info(f"Noting {val} @ {row},{col}")
 
         if self.initial[row][col] != 0:
-            print("Tile in initial state, ignoring note")
+            self.logger.info("Tile in initial state, ignoring note")
 
         elif val == self.notes[row][col][val-1]:
-            print("Duplicate, removing note")
+            self.logger.info("Duplicate, removing note")
             self.notes[row][col][val-1] = 0
 
         else: # Note is valid
@@ -115,10 +128,14 @@ class SudokuGame:
 
 
         # Update the session with curr timestamp & completion status
-        db.save_session(session_id, self.curr, self.time, self.notes)
-        db.update_completion_status(sess_id,self.IsSolved())
+        try:
+            db.save_session(session_id, self.curr, self.time, self.notes)
+            db.update_completion_status(sess_id,self.IsSolved())
+            self.logger.info(f"Session: {sess_id} has been updated")
+        except Exception as e:
+            self.logger.error("Unexpected Error: {e}")
 
     def SaveGame(self) -> None:
         """Interface for db.save_session()"""
-        print("Saving current game...")
+        self.logger.info("Saving current game...")
         db.save_session(self.ID, self.curr, self.time, self.notes)

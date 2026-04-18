@@ -5,7 +5,17 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
 from database.db_manager import db_function as db
+import logging
 
+logging.basicConfig(
+    level=logging.INFO,
+    filename='pydoku.log',
+    filemode='a',
+    format='%(asctime)s | %(name)-15s | %(levelname)-8s | %(message)s',
+    datefmt='%H:%M:%S',
+)
+
+logger = logging.getLogger(__name__)
 # Return the completed sessions information for later statistics use
 def completed_sessions():   
     # Get all the current sessions from the DB  

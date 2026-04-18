@@ -6,6 +6,17 @@
 
 from random import seed, randint
 from copy import deepcopy  # Deepcopy solution before changing current (due to nested list)
+import logging 
+
+logging.basicConfig(
+    level=logging.INFO,
+    filename='pydoku.log',
+    filemode='a',
+    format='%(asctime)s | %(name)-15s | %(levelname)-8s | %(message)s',
+    datefmt='%H:%M:%S',
+)
+
+logger = logging.getLogger(__name__)
 
 # Returns false if given 3x3 block contains num
 def NumInBox(grid, rowStart, colStart, num):
@@ -24,9 +35,7 @@ def FillBox(grid, row, col):
                 if not NumInBox(grid, row, col, num): break
             grid[row + i][col + j] = num
 
-
 def NumInRow(grid, i, num): return num in grid[i]
-
 
 def NumInCol(grid, j, num):
     for i in range(9):
