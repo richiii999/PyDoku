@@ -453,4 +453,19 @@ class db_function:
             "notes": notes,
             "time": result.time_spent if result.time_spent is not None else 0.0,
             "difficulty": db_function.get_difficulty(map_id)
-        }     
+        }
+        
+    def get_all_sessions_for_select():
+        SESSION = db.Table('SESSION', db.MetaData(), autoload_with=engine)
+        conn = engine.connect()
+        
+        # Get me all of the game sessions and statuses so I can acess them.
+        q = db.select(
+            SESSION.c.session_id, 
+            SESSION.c.map_id, 
+            SESSION.c.time_spent, 
+            SESSION.c.completion_status
+        ).order_by(SESSION.c.session_id.desc())
+        
+        return conn.execute(q).fetchall()
+    

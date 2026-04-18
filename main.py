@@ -282,6 +282,16 @@ class Pydoku:
         self.screen.blit(title_surf, title_surf.get_rect(center=(self.width // 2, 200)))
         self.win_btn.draw(self.screen)
 
+    def draw_selection_screen(self):
+        self.screen.fill(self.colors['background'])
+        self.back_btn.draw(self.screen) # Add the back button because we dnt want to get trapped
+        
+        title = self.title_font.render("Choose Game!", True, self.colors['primary'])
+        self.screen.blit(title, title.get_rect(center=(self.width // 2, 80))) # Make it center
+        
+        
+        pass 
+    
     def run(self) -> None:
         while self.running:
             for event in pygame.event.get():
@@ -298,7 +308,9 @@ class Pydoku:
                     self.handle_options_events(event)
                 #helper call to print to screen
                 elif self.state == "WIN":
-                    self.handle_win_events(event)    
+                    self.handle_win_events(event)
+                elif self.state == "SELECT_GAME":
+                    self.handle_selection_event(event)
 
             if self.state == "HOME":
                 self.draw_home()
@@ -310,7 +322,9 @@ class Pydoku:
                 self.draw_options()
             #draws the button    
             elif self.state == "WIN":
-                self.draw_win()    
+                self.draw_win()
+            elif self.state == "SELECT_GAME":
+                self.draw_selection_screen()
 
             pygame.display.flip()
             self.clock.tick(self.fps)
@@ -322,23 +336,8 @@ class Pydoku:
             self.game = SudokuGame(difficulty=self.difficulty)
             self.state = "GAME"
         elif self.prev_btn.is_clicked(event):
-            #load prev game
-            saved = db.load_prev_game()
-            #retrieve game info 
-            if saved:
-                self.game = SudokuGame(
-                    initial=saved["initial"],
-                    curr=saved["curr"],
-                    solution=saved["solution"],
-                    notes=saved["notes"],
-                    time=saved["time"],
-                    difficulty=saved["difficulty"],
-                    ID=saved["session_id"]
-                )
-                self.state = "GAME"
-            #if no game, print no prev game     
-            else:
-                self.logger.warning("No previous game found.")
+            self.session_list = db.get_all_sessions_for_select()
+            self.state = "SELECT_GAME"
         elif self.stats_btn.is_clicked(event):
             self.state = "STATS"
         elif self.opts_btn.is_clicked(event):
@@ -419,7 +418,13 @@ class Pydoku:
         if self.win_btn.is_clicked(event):
             self.state = "HOME"
             self.game = None
-
+    
+    def handle_selection_event(self, event) -> None:
+        """ Handle events in the selection screen """
+        if self.back_btn.is_clicked(event):
+            self.state = "HOME"
+        
+        
 if __name__ == "__main__":
     app = Pydoku()
     app.run()
