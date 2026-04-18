@@ -4,7 +4,18 @@ import sys
 import multiprocessing
 import Stats  # To access graphing functions
 from database.db_manager import db_function as db #need db access
-from Game import SudokuGame
+from Game import SudokuGame # The actual game logic.
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    filename='pydoku.log',
+    filemode='a',
+    format='%(asctime)s | %(name)-15s | %(levelname)-8s | %(message)s',
+    datefmt='%H:%M:%S',
+)
+
+logger = logging.getLogger("Main")
 
 class Button:
     def __init__(self, x, y, w, h, text, color, text_color):
@@ -57,8 +68,11 @@ class Slider:
 
 class Pydoku:
     def __init__(self) -> None:
+        self.logger = logging.getLogger("Pydoku")
         pygame.init()
+        self.logger.info("Initiated Pygame")
         self.load_settings()
+        self.logger.info("Successfuly Loaded Settings")
         
         self.screen = pygame.display.set_mode((self.width, self.height))
         pygame.display.set_caption("PyDoku")
@@ -123,8 +137,39 @@ class Pydoku:
         self.win_btn = Button(center_x, 400, btn_w, btn_h, "Back to Menu", self.colors['primary'], (255,255,255))
 
     def load_settings(self) -> None:
-        with open('settings.json', 'r') as f:
-            data = json.load(f)
+        # We are making default json settings so we may populate a potential non existing file.
+        default_settings = {
+            "colors": {
+                "primary": [174, 224, 255],
+                "background": [82, 72, 168],
+                "secondary": [105, 118, 250],
+                "tertiary": [221, 180, 255],
+                "fourth": [96, 213, 255]
+            },
+            "window": {
+                "width": 800,
+                "height": 800,
+                "fps": 60
+            },
+            "gameplay": {
+                "volume": 0.19,
+                "difficulty": 10
+            },
+        }
+        try:
+            with open('settings.json', 'r') as f:
+                data = json.load(f)
+                self.logger.info("Loading Settings...")
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            # If the file does not exist use the default_settings to mak the new file.
+            self.logger.warning("settings.json could not be found making default settings.")
+            data = default_settings
+            with open('settings.json', 'w') as f:
+                json.dump(data, f, indent=4)
+        except Exception as e:
+            self.logger.error(f"Unexpected Error: {e}")
+        
+        # Get the settings present within waht can be oaded.
         self.colors = data['colors']
         self.width = data['window']['width']
         self.height = data['window']['height']
@@ -143,9 +188,16 @@ class Pydoku:
                     "difficulty": self.difficulty
                 }
             }
-            with open('settings.json', 'w') as f:
-                json.dump(data, f, indent=4)
-    
+            try:
+                with open('settings.json', 'w') as f:
+                    json.dump(data, f, indent=4)
+            except PermissionError as e:
+                self.logger.error(f"Permission error: {e}")
+            except OSError as e:
+                self.logger.error(f"Operating System error: {e}")
+            except Exception as e:
+                self.logger.error(f"Unexpected Error: {e}")
+        
     def spawn_stats_process(self, target_func):
         """Spawns a new OS process for Matplotlib to ensure thread-safe GUI rendering"""
         p = multiprocessing.Process(target=target_func)
