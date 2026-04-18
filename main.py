@@ -286,11 +286,25 @@ class Pydoku:
         self.screen.fill(self.colors['background'])
         self.back_btn.draw(self.screen) # Add the back button because we dnt want to get trapped
         
+        # Add Title
         title = self.title_font.render("Choose Game!", True, self.colors['primary'])
-        self.screen.blit(title, title.get_rect(center=(self.width // 2, 80))) # Make it center
+        self.screen.blit(title, title.get_rect(center=(self.width // 2, 80)))
         
-        
-        pass 
+        # SHow previous games
+        for i, selection, in enumerate(self.session_list): # Go through all game from database
+            y_pos = 150 + (i * 50)
+            session_info = f"ID {str(selection.session_id)} | MAP {str(selection.map_id)} | TIME {str(selection.time_spent)} s"
+            
+            # Choose block color
+            if selection.completion_status == False:
+                color = (255, 255, 255)
+            else:
+                color = (150, 150, 150)
+                
+            btn_txt = self.num_font.render(session_info, True, color)
+            rect = btn_txt.get_rect(center=(self.width // 2, y_pos))
+            self.screen.blit(btn_txt, rect)
+
     
     def run(self) -> None:
         while self.running:
