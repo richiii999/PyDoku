@@ -454,9 +454,67 @@ class db_function:
             "time": result.time_spent if result.time_spent is not None else 0.0,
             "difficulty": db_function.get_difficulty(map_id)
         }
+    
+    def load_selected_game(selected_id):
+        """ get selected game data from session id """
         
-    def get_all_sessions_for_select():
+        # Setup tables and connections
         SESSION = db.Table('SESSION', db.MetaData(), autoload_with=engine)
+        MAP = db.Table('MAP', db.MetaData(), autoload_with=engine)
+        SOL = db.Table('MAP_SOLUTIONS', db.MetaData(), autoload_with=engine)
+        conn = engine.connect()
+
+        # Check if session id is in the database
+        if selected_id is not None: 
+            query = db.select(SESSION).where(SESSION.c.session_id == selected_id)
+            result = conn.execute(query).fetchone()
+            logger.warning("Cannot Find the selected id in database")
+        else:
+            query = db.select(SESSION).where(SESSION.c.completion_status == 0).order_by(SESSION.c.session_id.desc())
+            result = conn.execute(query).fetchone()
+
+            if not result:
+                query = db.select(SESSION).order_by(SESSION.c.session_id.desc())
+                result = conn.execute(query).fetchone()
+
+        if not result:
+            return None  
+
+        session_id = result.session_id
+        map_id = result.map_id
+
+        # make query
+        map_query = db.select(MAP.c.map).where(MAP.c.map_id == map_id)
+        sol_query = db.select(SOL.c.map_solution).where(SOL.c.map_id == map_id)
+
+        map_str = conn.execute(map_query).scalar()
+        sol_str = conn.execute(sol_query).scalar()
+
+        # Convert to strings
+        curr = db_function.string_to_array(result.session_map)
+        initial = db_function.string_to_array(map_str)
+        solution = db_function.string_to_array(sol_str)
+        
+        notes = None
+        if result.notes:
+            notes_flat = json.loads(result.notes)
+            notes = db_function.convert_1d_to_3d(notes_flat)
+
+        # Return a dictionary of session components
+        return {
+            "session_id": session_id,
+            "initial": initial,
+            "curr": curr,
+            "solution": solution,
+            "notes": notes,
+            "time": result.time_spent if result.time_spent is not None else 0.0,
+            "difficulty": db_function.get_difficulty(map_id),
+        }
+
+    def get_all_sessions_for_select():
+        meta = db.MetaData()
+        SESSION = db.Table('SESSION', db.MetaData(), autoload_with=engine)
+        MAP = db.Table('MAP', meta, autoload_with=engine)
         conn = engine.connect()
         
         # Get me all of the game sessions and statuses so I can acess them.
@@ -464,7 +522,10 @@ class db_function:
             SESSION.c.session_id, 
             SESSION.c.map_id, 
             SESSION.c.time_spent, 
-            SESSION.c.completion_status
+            SESSION.c.completion_status,
+            MAP.c.difficulty
+        ).select_from(
+            SESSION.join(MAP, SESSION.c.map_id == MAP.c.map_id)
         ).order_by(SESSION.c.session_id.desc())
         
         return conn.execute(q).fetchall()

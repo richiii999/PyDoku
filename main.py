@@ -295,18 +295,26 @@ class Pydoku:
         for i, selection, in enumerate(self.session_list): # Go through all game from database
             y_pos = 150 + (i * 50) + self.scroll_y
             
+            selection_font = pygame.font.SysFont("Arial", 20, bold=True)
+            
+            # Optimize to only generate what is on screen
             if y_pos > 100 and y_pos < self.height + 50:
-                # Choose block color
+                
+                btn_rect = pygame.Rect(0,0,500,40)
+                btn_rect.center = (self.width // 2, y_pos)
+                pygame.draw.rect(self.screen, self.colors['secondary'], btn_rect, border_radius=3)
+                
+                # Format Session data
                 if selection.completion_status == False:
                     color = (255, 255, 255)
                     status_indicator = "Not Compelete"
                 else:
-                    color = (150, 150, 150)
+                    color = self.colors['tertiary']
                     status_indicator = "Complete"
-                session_info = f"ID {str(selection.session_id)} | MAP {str(selection.map_id)} | STATUS {status_indicator}"
-                
-                
-                btn_txt = self.num_font.render(session_info, True, color)
+                    
+                    
+                session_info = f"ID: {selection.session_id} | DIFFICULTY: {selection.difficulty} | STATUS: {status_indicator}"
+                btn_txt = selection_font.render(session_info, True, color)
                 rect = btn_txt.get_rect(center=(self.width // 2, y_pos))
                 self.screen.blit(btn_txt, rect)
 
@@ -458,7 +466,29 @@ class Pydoku:
                 self.scroll_y = max(self.scroll_y, -(height - (self.height - 200)))
                 
         # Press Events
-
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                for i, selection in enumerate(self.session_list):
+                    y_pos = 150 + (i * 50) + self.scroll_y
+                    
+                    # Create the same rect used in draw_selection_screen
+                    click_rect = pygame.Rect(0, 0, 500, 40)
+                    click_rect.center = (self.width // 2, y_pos)
+                    
+                    # Check if click is inside this rect AND below the header
+                    if y_pos > 130 and click_rect.collidepoint(event.pos):
+                        saved = db.load_selected_game(selection.session_id)
+                        if saved:
+                            self.game = SudokuGame(
+                                initial=saved["initial"],
+                                curr=saved["curr"],
+                                solution=saved["solution"],
+                                notes=saved["notes"],
+                                time=saved["time"],
+                                difficulty=saved["difficulty"],
+                                ID=saved["session_id"]
+                            )
+                            self.state = "GAME"
+                        break
         
         
 if __name__ == "__main__":
