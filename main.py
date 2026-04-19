@@ -112,6 +112,7 @@ class Pydoku:
         
         self.show_errors = False
         
+        self.show_notes = False
         # Updated Navigation Buttons
         self.play_btn = Button(center_x, 260, btn_w, btn_h, "New Game", self.colors['primary'], (255,255,255))
         self.prev_btn = Button(center_x, 340, btn_w, btn_h, "Previous Game", self.colors['secondary'], (255,255,255))
@@ -275,6 +276,10 @@ class Pydoku:
                                                         self.grid_offset_y + r * self.cell_size + self.cell_size//2))
                     self.screen.blit(num_surf, num_rect)
 
+        # Notes
+        if self.show_notes and self.selected_cell:
+            self.draw_notes(self.selected_cell)
+        
         # Get the current time and seperate it into minute/seconds     
         elapsed_time = self.game.time
         mins, secs = divmod(int(elapsed_time), 60)
@@ -283,6 +288,23 @@ class Pydoku:
         time_surf = self.timer_font.render(time_str, True, self.colors['primary'])
         time_rect = time_surf.get_rect(center=(self.width // 2, self.grid_offset_y - 40))
         self.screen.blit(time_surf, time_rect)
+        
+    def draw_notes(self, cell) -> None:
+        row, col = cell # Break cell to rows and columns
+        notes = self.game.notes[row][col]
+        sizequeen = 120
+        surf = pygame.Surface((sizequeen, sizequeen))
+        surf.fill(self.colors['background'])
+        pygame.draw.rect(surf, self.colors['tertiary'], (0,0,sizequeen, sizequeen))
+        note_cell = sizequeen // 3 # Make that thang 3 by 3
+        for i in range(9):
+            if notes[i] != 0:
+                text = self.num_font.render(str(notes[i]), True, self.colors['primary'])
+                x = (i%3)*note_cell+10
+                y = (i//3)*note_cell+5
+                surf.blit(text, (x,y))
+                
+        self.screen.blit(surf, (self.width // 2 - 60, self.height // 2 - 60))
         
     def draw_options(self) -> None:
         """ draw_options: draws the option screen """
@@ -451,6 +473,19 @@ class Pydoku:
             elif event.key == pygame.K_BACKSPACE or event.key == pygame.K_0:
                 self.game.curr[r][c] = 0 
 
+        if event.type == pygame.KEYDOWN:
+            # For normal keypress
+            if event.key == pygame.K_n and self.selected_cell:
+                self.show_notes = not self.show_notes
+                self.draw_notes(self.selected_cell)
+                self.logger.info(f"Opening Notes for: {self.selected_cell.index}")
+            
+            # For note key press
+            if self.show_notes and self.selected_cell:
+                row, col = self.selected_cell
+                if pygame.K_1 <= event.key <= pygame.K_9:
+                    self.game.AddNote(row, col, event.key - pygame.K_0)
+        
         # Increment our game time 
         if event.type == self.TIMER_EVENT and self.game:
             self.game.time += 1 
@@ -526,7 +561,6 @@ class Pydoku:
                             self.state = "GAME"
                         break
         
-
 if __name__ == "__main__":
     # Create the time stamp when the game starts
     now = datetime.now()
