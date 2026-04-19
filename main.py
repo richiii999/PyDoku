@@ -6,6 +6,7 @@ import Stats  # To access graphing functions
 from database.db_manager import db_function as db #need db access
 from Game import SudokuGame # The actual game logic.    
 import logging
+from datetime import datetime
 
 logging.basicConfig(
     level=logging.INFO,
@@ -15,6 +16,7 @@ logging.basicConfig(
     datefmt='%H:%M:%S',
 )
 
+logger = logging.getLogger(__name__)
 class Button:
     def __init__(self, x, y, w, h, text, color, text_color):
         self.rect = pygame.Rect(x, y, w, h)
@@ -492,5 +494,12 @@ class Pydoku:
         
         
 if __name__ == "__main__":
-    app = Pydoku()
-    app.run()
+    now = datetime.now()
+    
+    formated_time = now.strftime("%Y-%m-%d %H:%M:%S")
+    logger.info(f"Starting Game: {formated_time}")
+    try:
+        app = Pydoku()
+        app.run()
+    except Exception as e:
+        logger.error("Unknown Error: {e}")
