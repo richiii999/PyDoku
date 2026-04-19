@@ -43,14 +43,17 @@ class SudokuGame:
         self.numNotes    = numNotes    # Num notes added
         self.difficulty  = difficulty  # Num empty squares started with
 
+        self.manual_save = False
         self.logger.info(f"Sol=\n{self.solution}")
         if ID != 0:
             self.ID = ID  # Loading a previous game, session already exists
+            self.is_new = False # Signal if this is a new or old game to PyDoku
         else:
             map_id = db.add_new_map(self.initial, self.solution, self.difficulty)
             db.add_session(map_id, self.curr)  # create the session row
             # get the new session id that was just created
             self.ID = db.get_all_sessions_ids()[-1][0]
+            self.is_new = True # Signal if this is a new or old game to pyDoku
 
 
         # Debug print the solution

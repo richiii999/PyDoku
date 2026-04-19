@@ -17,7 +17,9 @@ logging.basicConfig(
 )
 
 logger = logging.getLogger(__name__)
+
 class Button:
+    """ Class for button handling for PyDoku"""
     def __init__(self, x, y, w, h, text, color, text_color):
         self.rect = pygame.Rect(x, y, w, h)
         self.text = text
@@ -26,17 +28,20 @@ class Button:
         self.font = pygame.font.SysFont("Arial", 28, bold=True)
 
     def draw(self, screen):
+        """ draw: Handles drawing on the screen """
         pygame.draw.rect(screen, self.color, self.rect, border_radius=8)
         txt_surf = self.font.render(self.text, True, self.text_color)
         txt_rect = txt_surf.get_rect(center=self.rect.center)
         screen.blit(txt_surf, txt_rect)
 
     def is_clicked(self, event):
+        """ is_clicked: Handles event when button is pressed """
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             return self.rect.collidepoint(event.pos)
         return False
 
 class Slider:
+    """ Class for slider handling for PyDoku """
     def __init__(self, x, y, w, min_val, max_val, label, initial_val, color):
         self.rect = pygame.Rect(x, y, w, 10)
         self.handle_rect = pygame.Rect(x, y - 10, 20, 30)
@@ -52,12 +57,14 @@ class Slider:
         self.handle_rect.centerx = pos
 
     def draw(self, screen):
+        """ draw: Draws the slider on screen """
         pygame.draw.rect(screen, (200, 200, 200), self.rect) # Track
         pygame.draw.rect(screen, self.color, self.handle_rect) # Handle
         txt = self.font.render(f"{self.label}: {int(self.value)}", True, (255, 255, 255))
         screen.blit(txt, (self.rect.x, self.rect.y - 35))
 
     def update(self, event):
+        """ update: Handles update of slider motion """
         if event.type == pygame.MOUSEBUTTONDOWN or (event.type == pygame.MOUSEMOTION and event.buttons[0]):
             if self.rect.collidepoint(event.pos) or self.handle_rect.collidepoint(event.pos):
                 self.handle_rect.centerx = max(self.rect.left, min(event.pos[0], self.rect.right))
@@ -67,6 +74,7 @@ class Slider:
         return False
 
 class Pydoku:
+    """ Pydoku: handles the GUI and the game logic """
     def __init__(self) -> None:
         self.logger = logging.getLogger(f"{self.__class__.__name__}")
         pygame.init()
@@ -138,6 +146,7 @@ class Pydoku:
         self.win_btn = Button(center_x, 400, btn_w, btn_h, "Back to Menu", self.colors['primary'], (255,255,255))
 
     def load_settings(self) -> None:
+        """ load_settings: loads the settings stored in settings.json """
         # We are making default json settings so we may populate a potential non existing file.
         default_settings = {
             "colors": {
@@ -181,31 +190,33 @@ class Pydoku:
         self.difficulty = gameplay.get('difficulty', 40)
         
     def save_settings(self):
-            data = {
-                "colors": self.colors,
-                "window": {"width": self.width, "height": self.height, "fps": self.fps},
-                "gameplay": {
-                    "volume": round(self.volume, 2),
-                    "difficulty": self.difficulty
-                }
+        """ save_settings: save settings to setttings.json """
+        data = {
+            "colors": self.colors,
+            "window": {"width": self.width, "height": self.height, "fps": self.fps},
+            "gameplay": {
+                "volume": round(self.volume, 2),
+                "difficulty": self.difficulty
             }
-            try:
-                with open('settings.json', 'w') as f:
-                    json.dump(data, f, indent=4)
-            except PermissionError as e:
-                self.logger.error(f"Permission error: {e}")
-            except OSError as e:
-                self.logger.error(f"Operating System error: {e}")
-            except Exception as e:
-                self.logger.error(f"Unexpected Error: {e}")
+        }
+        try:
+            with open('settings.json', 'w') as f:
+                json.dump(data, f, indent=4)
+        except PermissionError as e:
+            self.logger.error(f"Permission error: {e}")
+        except OSError as e:
+            self.logger.error(f"Operating System error: {e}")
+        except Exception as e:
+            self.logger.error(f"Unexpected Error: {e}")
         
     def spawn_stats_process(self, target_func):
-        """Spawns a new OS process for Matplotlib to ensure thread-safe GUI rendering"""
+        """ spawn_stats_process: Spawns a new OS process for Matplotlib to ensure thread-safe GUI rendering"""
         p = multiprocessing.Process(target=target_func)
         p.daemon = True
         p.start()
 
     def draw_home(self) -> None:
+        """ draw_home: draws the home screen for PyDoku """
         self.screen.fill(self.colors['background'])
         title_surf = self.title_font.render("PyDoku", True, self.colors['primary'])
         self.screen.blit(title_surf, title_surf.get_rect(center=(self.width // 2, 150)))
@@ -215,6 +226,7 @@ class Pydoku:
         self.opts_btn.draw(self.screen)
 
     def draw_stats(self) -> None:
+        """ draw_stats: draws the statics screen """
         self.screen.fill(self.colors['background'])
         title_surf = self.title_font.render("Statistics", True, self.colors['primary'])
         self.screen.blit(title_surf, title_surf.get_rect(center=(self.width // 2, 150)))
@@ -224,6 +236,7 @@ class Pydoku:
         self.back_btn.draw(self.screen)
 
     def draw_game(self) -> None:
+        """ draw_game: draws the screen for when the game is played """
         self.screen.fill(self.colors['background'])
         self.back_btn.draw(self.screen)
         
@@ -272,6 +285,7 @@ class Pydoku:
         self.screen.blit(time_surf, time_rect)
         
     def draw_options(self) -> None:
+        """ draw_options: draws the option screen """
         self.screen.fill(self.colors['background'])
         self.back_btn.draw(self.screen)
         self.vol_slider.draw(self.screen)
@@ -279,6 +293,7 @@ class Pydoku:
         self.save_btn.draw(self.screen)
 
     def draw_win(self) -> None:
+        """ draw_win: draws the win button"""
         #put the win button on the screen when someone wins 
         self.screen.fill(self.colors['background'])
         title_surf = self.title_font.render("You Win!", True, self.colors['primary'])
@@ -286,6 +301,7 @@ class Pydoku:
         self.win_btn.draw(self.screen)
 
     def draw_selection_screen(self):
+        """ draw_select_screen: draws the screen for selecting previous games. """
         self.screen.fill(self.colors['background'])
         self.back_btn.draw(self.screen) # Add the back button because we dnt want to get trapped
         
@@ -326,6 +342,7 @@ class Pydoku:
         self.back_btn.draw(self.screen)
         
     def run(self) -> None:
+        """ run: Handles the entire game logic for the GUI."""
         while self.running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -365,6 +382,7 @@ class Pydoku:
         sys.exit()
 
     def handle_home_events(self, event) -> None:
+        """ handle_home_events: handles what happens when elements are pressed on GUI."""
         if self.play_btn.is_clicked(event):
             self.game = SudokuGame(difficulty=self.difficulty)
             self.state = "GAME"
@@ -377,6 +395,7 @@ class Pydoku:
             self.state = "OPTIONS"
 
     def handle_stats_events(self, event) -> None:
+        """ handle_stats_events: hanldes press events on the stats screen """
         if self.back_btn.is_clicked(event):
             self.state = "HOME"
         if self.stat_time_btn.is_clicked(event):
@@ -386,21 +405,34 @@ class Pydoku:
         elif self.stat_diff_btn.is_clicked(event):
             self.spawn_stats_process(Stats.Difficulty)
 
-    def handle_game_events(self, event) -> None:        
+    def handle_game_events(self, event) -> None:
+        """ handle_game_events: handles the events when something is pressed in the game """        
         if self.back_btn.is_clicked(event):
-            self.state = "HOME"
-            self.selected_cell = None
-            return 
-        
-        #saves game based on button click   
+                if self.game is not None:
+                    has_moved = self.game.curr != self.game.initial # Keeping this phere incase something we want to add in the future.
+                    was_manual = getattr(self.game, 'manual_save', False)
+                    is_new_game = getattr(self.game, 'is_new', False) 
+
+                    if was_manual: # Checkes to see if the game was already in the database so it does not delete it.
+                        self.game.SaveGame()
+                    elif is_new_game: # Only deletes new games with no saves
+                        db.delete_session(self.game.ID)
+                        self.logger.info("Deleting Game because it is new and no one saved")
+                        
+                    self.state = "HOME"
+                    self.selected_cell = None
+                    return
+            
         if self.save_game_btn.is_clicked(event):
             if self.game:
-             self.game.SaveGame()
+                self.game.SaveGame()
+                self.game.manual_save = True
 
         #prints out what errors you made
         if self.check_btn.is_clicked(event):
             if self.game:
                 self.show_errors = True
+        
         if event.type == pygame.MOUSEBUTTONDOWN:
             x, y = event.pos
             col = (x - self.grid_offset_x) // self.cell_size
@@ -424,6 +456,7 @@ class Pydoku:
             self.game.time += 1 
             
     def handle_options_events(self, event) -> None:
+        """ hanldle_option_events: handles what happens when something is pressed in the options screen"""
         if self.back_btn.is_clicked(event):
             self.state = "HOME"
             return
@@ -447,6 +480,7 @@ class Pydoku:
             self.save_settings()
  
     def handle_win_events(self, event) -> None:
+        """ handle_win_events: handles what happens when a game is won. """
         #handler function to help us set game state and current board 
         if self.win_btn.is_clicked(event):
             self.state = "HOME"
@@ -492,14 +526,13 @@ class Pydoku:
                             self.state = "GAME"
                         break
         
-        
+
 if __name__ == "__main__":
+    # Create the time stamp when the game starts
     now = datetime.now()
     
     formated_time = now.strftime("%Y-%m-%d %H:%M:%S")
     logger.info(f"Starting Game: {formated_time}")
-    try:
-        app = Pydoku()
-        app.run()
-    except Exception as e:
-        logger.error("Unknown Error: {e}")
+    
+    app = Pydoku()
+    app.run()

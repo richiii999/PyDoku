@@ -268,7 +268,8 @@ class db_function:
 
         query = db.select(db.func.max(MAP.c.map_id))
         map_ids = conn.execute(query).scalar()
-        new_id = map_ids  + 1
+        new_id = (map_ids if map_ids is not None else 0) + 1
+        
         map_array = db_function.array_to_string(map_array)
         solution_array = db_function.array_to_string(solution_array)
 
@@ -286,11 +287,12 @@ class db_function:
         sess_map_str = db_function.array_to_string(sess_map)
         query = db.select(db.func.max(MAP.c.session_id))
         map_ids = conn.execute(query).scalar()
-        new_id = map_ids  + 1 
+        new_id = (map_ids if map_ids is not None else 0) + 1
         
         insert_query = MAP.insert().values(map_id=id,session_id = new_id, completion_status = 0,session_map=sess_map_str)
         conn.execute(insert_query)
         conn.commit()
+        logger.info(f"Session added: {new_id}")
 
     #delete rows in the table
     def delete_map(id):
