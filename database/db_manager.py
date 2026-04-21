@@ -9,7 +9,7 @@ import json
 
 import logging
 
-engine = engine = db.create_engine('sqlite:///database/pydoku.db')
+engine = engine = db.create_engine('sqlite:///database/pydoku.db',pool_size=99, max_overflow=-1)
 
 
 logging.basicConfig(

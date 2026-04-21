@@ -1,0 +1,201 @@
+22:47:13 | __main__        | INFO     | Starting Game: 2026-04-18 22:47:13
+22:47:14 | Pydoku          | INFO     | Initiated Pygame
+22:47:14 | Pydoku          | INFO     | Loading Settings...
+22:47:14 | Pydoku          | INFO     | Successfuly Loaded Settings
+22:50:06 | SudokuGame      | INFO     | Sol=
+[[9, 3, 2, 1, 4, 7, 6, 5, 8], [1, 8, 4, 5, 6, 2, 7, 3, 9], [5, 7, 6, 3, 9, 8, 1, 4, 2], [4, 1, 7, 2, 8, 3, 5, 9, 6], [8, 5, 9, 4, 7, 6, 2, 1, 3], [6, 2, 3, 9, 1, 5, 8, 7, 4], [3, 4, 8, 7, 2, 1, 9, 6, 5], [7, 6, 5, 8, 3, 9, 4, 2, 1], [2, 9, 1, 6, 5, 4, 3, 8, 7]]
+22:50:06 | database.db_manager | INFO     | Session added: 1
+22:50:09 | SudokuGame      | INFO     | Saving current game...
+22:50:10 | SudokuGame      | INFO     | Saving current game...
+22:50:12 | database.db_manager | WARNING  | Cannot Find the selected id in database
+22:50:12 | SudokuGame      | INFO     | Sol=
+[[9, 3, 2, 1, 4, 7, 6, 5, 8], [1, 8, 4, 5, 6, 2, 7, 3, 9], [5, 7, 6, 3, 9, 8, 1, 4, 2], [4, 1, 7, 2, 8, 3, 5, 9, 6], [8, 5, 9, 4, 7, 6, 2, 1, 3], [6, 2, 3, 9, 1, 5, 8, 7, 4], [3, 4, 8, 7, 2, 1, 9, 6, 5], [7, 6, 5, 8, 3, 9, 4, 2, 1], [2, 9, 1, 6, 5, 4, 3, 8, 7]]
+22:50:15 | database.db_manager | WARNING  | Cannot Find the selected id in database
+22:50:15 | SudokuGame      | INFO     | Sol=
+[[9, 3, 2, 1, 4, 7, 6, 5, 8], [1, 8, 4, 5, 6, 2, 7, 3, 9], [5, 7, 6, 3, 9, 8, 1, 4, 2], [4, 1, 7, 2, 8, 3, 5, 9, 6], [8, 5, 9, 4, 7, 6, 2, 1, 3], [6, 2, 3, 9, 1, 5, 8, 7, 4], [3, 4, 8, 7, 2, 1, 9, 6, 5], [7, 6, 5, 8, 3, 9, 4, 2, 1], [2, 9, 1, 6, 5, 4, 3, 8, 7]]
+22:50:19 | database.db_manager | WARNING  | Cannot Find the selected id in database
+22:50:19 | SudokuGame      | INFO     | Sol=
+[[9, 3, 2, 1, 4, 7, 6, 5, 8], [1, 8, 4, 5, 6, 2, 7, 3, 9], [5, 7, 6, 3, 9, 8, 1, 4, 2], [4, 1, 7, 2, 8, 3, 5, 9, 6], [8, 5, 9, 4, 7, 6, 2, 1, 3], [6, 2, 3, 9, 1, 5, 8, 7, 4], [3, 4, 8, 7, 2, 1, 9, 6, 5], [7, 6, 5, 8, 3, 9, 4, 2, 1], [2, 9, 1, 6, 5, 4, 3, 8, 7]]
+22:50:39 | database.db_manager | WARNING  | Cannot Find the selected id in database
+22:50:39 | SudokuGame      | INFO     | Sol=
+[[9, 3, 2, 1, 4, 7, 6, 5, 8], [1, 8, 4, 5, 6, 2, 7, 3, 9], [5, 7, 6, 3, 9, 8, 1, 4, 2], [4, 1, 7, 2, 8, 3, 5, 9, 6], [8, 5, 9, 4, 7, 6, 2, 1, 3], [6, 2, 3, 9, 1, 5, 8, 7, 4], [3, 4, 8, 7, 2, 1, 9, 6, 5], [7, 6, 5, 8, 3, 9, 4, 2, 1], [2, 9, 1, 6, 5, 4, 3, 8, 7]]
+22:56:29 | SudokuGame      | INFO     | Saving current game...
+22:56:30 | SudokuGame      | INFO     | Saving current game...
+22:56:49 | SudokuGame      | INFO     | Session: 1 has been updated
+23:24:38 | __main__        | INFO     | Starting Game: 2026-04-18 23:24:38
+23:24:38 | Pydoku          | INFO     | Initiated Pygame
+23:24:38 | Pydoku          | INFO     | Loading Settings...
+23:24:38 | Pydoku          | INFO     | Successfuly Loaded Settings
+23:24:40 | SudokuGame      | INFO     | Sol=
+[[9, 1, 8, 2, 3, 5, 4, 6, 7], [7, 4, 2, 1, 6, 8, 3, 9, 5], [6, 5, 3, 4, 9, 7, 1, 2, 8], [1, 6, 5, 3, 2, 4, 7, 8, 9], [2, 8, 4, 6, 7, 9, 5, 1, 3], [3, 7, 9, 8, 5, 1, 2, 4, 6], [4, 9, 7, 5, 8, 2, 6, 3, 1], [5, 2, 6, 9, 1, 3, 8, 7, 4], [8, 3, 1, 7, 4, 6, 9, 5, 2]]
+23:24:40 | database.db_manager | INFO     | Session added: 2
+23:24:43 | Pydoku          | INFO     | Deleting Game because it is new and no one saved
+23:24:49 | SudokuGame      | INFO     | Sol=
+[[2, 8, 3, 1, 4, 5, 7, 9, 6], [5, 7, 4, 2, 9, 6, 1, 8, 3], [1, 9, 6, 3, 8, 7, 4, 5, 2], [3, 1, 8, 4, 5, 2, 9, 6, 7], [6, 2, 9, 7, 3, 1, 5, 4, 8], [4, 5, 7, 9, 6, 8, 2, 3, 1], [7, 6, 5, 8, 1, 4, 3, 2, 9], [9, 4, 2, 6, 7, 3, 8, 1, 5], [8, 3, 1, 5, 2, 9, 6, 7, 4]]
+23:24:49 | database.db_manager | INFO     | Session added: 2
+23:24:51 | Pydoku          | INFO     | Opening Notes for: <built-in method index of tuple object at 0x7fb7a8793fc0>
+23:24:54 | SudokuGame      | INFO     | Noting 1 @ 2,1
+23:24:58 | Pydoku          | INFO     | Opening Notes for: <built-in method index of tuple object at 0x7fb7a8793f00>
+23:24:58 | Pydoku          | INFO     | Opening Notes for: <built-in method index of tuple object at 0x7fb7a8793f00>
+23:24:59 | SudokuGame      | INFO     | Noting 1 @ 2,0
+23:25:00 | SudokuGame      | INFO     | Noting 2 @ 2,0
+23:25:00 | SudokuGame      | INFO     | Noting 3 @ 2,0
+23:25:00 | SudokuGame      | INFO     | Noting 4 @ 2,0
+23:25:01 | SudokuGame      | INFO     | Noting 5 @ 2,0
+23:25:01 | SudokuGame      | INFO     | Noting 6 @ 2,0
+23:25:12 | Pydoku          | INFO     | Opening Notes for: <built-in method index of tuple object at 0x7fb7a8793bc0>
+23:25:13 | SudokuGame      | INFO     | Saving current game...
+23:25:16 | SudokuGame      | INFO     | Saving current game...
+23:25:19 | database.db_manager | WARNING  | Cannot Find the selected id in database
+23:25:19 | SudokuGame      | INFO     | Sol=
+[[2, 8, 3, 1, 4, 5, 7, 9, 6], [5, 7, 4, 2, 9, 6, 1, 8, 3], [1, 9, 6, 3, 8, 7, 4, 5, 2], [3, 1, 8, 4, 5, 2, 9, 6, 7], [6, 2, 9, 7, 3, 1, 5, 4, 8], [4, 5, 7, 9, 6, 8, 2, 3, 1], [7, 6, 5, 8, 1, 4, 3, 2, 9], [9, 4, 2, 6, 7, 3, 8, 1, 5], [8, 3, 1, 5, 2, 9, 6, 7, 4]]
+23:25:21 | Pydoku          | INFO     | Opening Notes for: <built-in method index of tuple object at 0x7fb775eca4c0>
+23:25:40 | SudokuGame      | INFO     | Noting 1 @ 4,3
+23:25:40 | SudokuGame      | INFO     | Tile in initial state, ignoring note
+23:25:40 | SudokuGame      | INFO     | Noting 2 @ 4,3
+23:25:40 | SudokuGame      | INFO     | Tile in initial state, ignoring note
+23:25:41 | SudokuGame      | INFO     | Noting 3 @ 4,3
+23:25:41 | SudokuGame      | INFO     | Tile in initial state, ignoring note
+23:25:44 | Pydoku          | INFO     | Opening Notes for: <built-in method index of tuple object at 0x7fb775eca500>
+23:25:45 | SudokuGame      | INFO     | Saving current game...
+23:25:46 | SudokuGame      | INFO     | Saving current game...
+21:06:58 | __main__        | INFO     | Starting Game: 2026-04-20 21:06:58
+21:06:58 | Pydoku          | INFO     | Initiated Pygame
+21:06:58 | Pydoku          | INFO     | Loading Settings...
+21:06:58 | Pydoku          | INFO     | Successfuly Loaded Settings
+21:47:45 | __main__        | INFO     | Starting Game: 2026-04-20 21:47:45
+21:47:46 | Pydoku          | INFO     | Initiated Pygame
+21:47:46 | Pydoku          | INFO     | Loading Settings...
+21:47:46 | Pydoku          | INFO     | Successfuly Loaded Settings
+21:47:48 | SudokuGame      | INFO     | Sol=
+[[9, 5, 7, 1, 2, 3, 4, 6, 8], [8, 6, 1, 4, 5, 7, 3, 2, 9], [2, 4, 3, 8, 6, 9, 1, 5, 7], [1, 2, 9, 5, 8, 6, 7, 4, 3], [5, 7, 8, 3, 4, 2, 9, 1, 6], [4, 3, 6, 7, 9, 1, 5, 8, 2], [7, 9, 5, 2, 1, 8, 6, 3, 4], [6, 1, 2, 9, 3, 4, 8, 7, 5], [3, 8, 4, 6, 7, 5, 2, 9, 1]]
+21:47:48 | database.db_manager | INFO     | Session added: 3
+21:47:51 | Pydoku          | INFO     | Deleting Game because it is new and no one saved
+21:48:08 | SudokuGame      | INFO     | Sol=
+[[6, 7, 8, 1, 3, 2, 4, 5, 9], [3, 9, 1, 4, 5, 6, 2, 8, 7], [2, 4, 5, 8, 9, 7, 1, 3, 6], [1, 3, 9, 6, 8, 5, 7, 4, 2], [4, 5, 7, 3, 2, 9, 6, 1, 8], [8, 2, 6, 7, 1, 4, 3, 9, 5], [7, 1, 2, 9, 4, 8, 5, 6, 3], [5, 8, 3, 2, 6, 1, 9, 7, 4], [9, 6, 4, 5, 7, 3, 8, 2, 1]]
+21:48:08 | database.db_manager | INFO     | Session added: 3
+21:59:01 | SudokuGame      | INFO     | Saving current game...
+21:59:04 | SudokuGame      | INFO     | Session: 3 has been updated
+21:59:16 | SudokuGame      | INFO     | Sol=
+[[5, 1, 8, 4, 2, 3, 9, 6, 7], [6, 4, 2, 1, 7, 9, 3, 8, 5], [7, 9, 3, 5, 8, 6, 1, 2, 4], [2, 3, 6, 8, 4, 1, 5, 7, 9], [1, 8, 5, 3, 9, 7, 2, 4, 6], [4, 7, 9, 2, 6, 5, 8, 1, 3], [8, 6, 7, 9, 3, 2, 4, 5, 1], [3, 5, 4, 6, 1, 8, 7, 9, 2], [9, 2, 1, 7, 5, 4, 6, 3, 8]]
+21:59:16 | database.db_manager | INFO     | Session added: 4
+22:03:32 | SudokuGame      | INFO     | Session: 4 has been updated
+22:03:49 | SudokuGame      | INFO     | Sol=
+[[6, 8, 4, 1, 3, 2, 5, 9, 7], [5, 7, 3, 6, 9, 4, 1, 2, 8], [2, 9, 1, 5, 8, 7, 6, 3, 4], [4, 2, 7, 8, 1, 5, 9, 6, 3], [1, 3, 6, 4, 2, 9, 7, 8, 5], [9, 5, 8, 3, 7, 6, 2, 4, 1], [7, 1, 2, 9, 4, 3, 8, 5, 6], [8, 4, 5, 2, 6, 1, 3, 7, 9], [3, 6, 9, 7, 5, 8, 4, 1, 2]]
+22:03:49 | database.db_manager | INFO     | Session added: 5
+22:09:45 | SudokuGame      | INFO     | Session: 5 has been updated
+22:11:23 | __main__        | INFO     | Starting Game: 2026-04-20 22:11:23
+22:11:23 | Pydoku          | INFO     | Initiated Pygame
+22:11:23 | Pydoku          | INFO     | Loading Settings...
+22:11:23 | Pydoku          | INFO     | Successfuly Loaded Settings
+22:12:31 | __main__        | INFO     | Starting Game: 2026-04-20 22:12:31
+22:12:31 | Pydoku          | INFO     | Initiated Pygame
+22:12:31 | Pydoku          | INFO     | Loading Settings...
+22:12:31 | Pydoku          | INFO     | Successfuly Loaded Settings
+22:14:25 | database.db_manager | WARNING  | Cannot Find the selected id in database
+22:14:25 | SudokuGame      | INFO     | Sol=
+[[2, 8, 3, 1, 4, 5, 7, 9, 6], [5, 7, 4, 2, 9, 6, 1, 8, 3], [1, 9, 6, 3, 8, 7, 4, 5, 2], [3, 1, 8, 4, 5, 2, 9, 6, 7], [6, 2, 9, 7, 3, 1, 5, 4, 8], [4, 5, 7, 9, 6, 8, 2, 3, 1], [7, 6, 5, 8, 1, 4, 3, 2, 9], [9, 4, 2, 6, 7, 3, 8, 1, 5], [8, 3, 1, 5, 2, 9, 6, 7, 4]]
+22:14:29 | SudokuGame      | INFO     | Saving current game...
+22:14:32 | SudokuGame      | INFO     | Saving current game...
+22:15:56 | __main__        | INFO     | Starting Game: 2026-04-20 22:15:56
+22:15:56 | Pydoku          | INFO     | Initiated Pygame
+22:15:56 | Pydoku          | INFO     | Loading Settings...
+22:15:56 | Pydoku          | INFO     | Successfuly Loaded Settings
+22:20:42 | __main__        | INFO     | Starting Game: 2026-04-20 22:20:42
+22:20:42 | Pydoku          | INFO     | Initiated Pygame
+22:20:42 | Pydoku          | INFO     | Loading Settings...
+22:20:42 | Pydoku          | INFO     | Successfuly Loaded Settings
+22:24:01 | __main__        | INFO     | Starting Game: 2026-04-20 22:24:01
+22:24:01 | Pydoku          | INFO     | Initiated Pygame
+22:24:01 | Pydoku          | INFO     | Loading Settings...
+22:24:01 | Pydoku          | INFO     | Successfuly Loaded Settings
+22:24:11 | SudokuGame      | INFO     | Sol=
+[[7, 9, 2, 1, 3, 5, 4, 6, 8], [4, 5, 6, 2, 7, 8, 1, 9, 3], [3, 8, 1, 4, 6, 9, 7, 5, 2], [5, 1, 9, 6, 2, 4, 8, 3, 7], [6, 3, 7, 8, 5, 1, 9, 2, 4], [8, 2, 4, 7, 9, 3, 5, 1, 6], [2, 6, 5, 9, 4, 7, 3, 8, 1], [9, 7, 8, 3, 1, 2, 6, 4, 5], [1, 4, 3, 5, 8, 6, 2, 7, 9]]
+22:24:11 | database.db_manager | INFO     | Session added: 23
+22:25:31 | SudokuGame      | INFO     | Saving current game...
+22:25:32 | SudokuGame      | INFO     | Saving current game...
+22:25:59 | SudokuGame      | INFO     | Session: 23 has been updated
+22:38:43 | __main__        | INFO     | Starting Game: 2026-04-20 22:38:43
+22:38:44 | Pydoku          | INFO     | Initiated Pygame
+22:38:44 | Pydoku          | INFO     | Loading Settings...
+22:38:44 | Pydoku          | INFO     | Successfuly Loaded Settings
+22:40:15 | database.db_manager | WARNING  | Cannot Find the selected id in database
+22:40:15 | SudokuGame      | INFO     | Sol=
+[[5, 8, 6, 1, 9, 3, 2, 4, 7], [4, 1, 9, 7, 5, 2, 8, 6, 3], [2, 7, 3, 8, 4, 6, 5, 9, 1], [3, 4, 2, 6, 8, 5, 7, 1, 9], [9, 6, 7, 2, 1, 4, 3, 8, 5], [1, 5, 8, 3, 7, 9, 4, 2, 6], [6, 2, 5, 4, 3, 1, 9, 7, 8], [8, 3, 1, 9, 2, 7, 6, 5, 4], [7, 9, 4, 5, 6, 8, 1, 3, 2]]
+22:42:58 | __main__        | INFO     | Starting Game: 2026-04-20 22:42:58
+22:42:58 | Pydoku          | INFO     | Initiated Pygame
+22:42:58 | Pydoku          | INFO     | Loading Settings...
+22:42:58 | Pydoku          | INFO     | Successfuly Loaded Settings
+22:43:25 | SudokuGame      | INFO     | Sol=
+[[3, 1, 7, 2, 4, 6, 5, 9, 8], [9, 6, 8, 5, 1, 3, 2, 4, 7], [5, 2, 4, 7, 8, 9, 1, 6, 3], [1, 3, 2, 4, 6, 8, 9, 7, 5], [6, 7, 5, 1, 9, 2, 8, 3, 4], [4, 8, 9, 3, 7, 5, 6, 1, 2], [7, 5, 1, 9, 2, 4, 3, 8, 6], [2, 4, 6, 8, 3, 1, 7, 5, 9], [8, 9, 3, 6, 5, 7, 4, 2, 1]]
+22:43:25 | database.db_manager | INFO     | Session added: 1
+22:45:13 | SudokuGame      | INFO     | Session: 1 has been updated
+22:46:26 | SudokuGame      | INFO     | Sol=
+[[8, 1, 9, 3, 2, 5, 4, 6, 7], [2, 7, 5, 4, 1, 6, 8, 3, 9], [6, 3, 4, 9, 8, 7, 1, 5, 2], [1, 5, 7, 2, 6, 8, 3, 9, 4], [4, 9, 8, 5, 7, 3, 6, 2, 1], [3, 6, 2, 1, 9, 4, 5, 7, 8], [7, 4, 6, 8, 5, 9, 2, 1, 3], [5, 2, 3, 7, 4, 1, 9, 8, 6], [9, 8, 1, 6, 3, 2, 7, 4, 5]]
+22:46:26 | database.db_manager | INFO     | Session added: 2
+22:46:35 | SudokuGame      | INFO     | Saving current game...
+22:46:37 | SudokuGame      | INFO     | Saving current game...
+22:46:46 | SudokuGame      | INFO     | Sol=
+[[3, 2, 4, 1, 6, 5, 8, 7, 9], [9, 7, 5, 2, 3, 8, 1, 4, 6], [1, 8, 6, 4, 7, 9, 2, 5, 3], [5, 1, 3, 7, 2, 4, 9, 6, 8], [4, 6, 7, 8, 9, 3, 5, 2, 1], [2, 9, 8, 6, 5, 1, 7, 3, 4], [6, 4, 1, 5, 8, 2, 3, 9, 7], [8, 5, 9, 3, 4, 7, 6, 1, 2], [7, 3, 2, 9, 1, 6, 4, 8, 5]]
+22:46:46 | database.db_manager | INFO     | Session added: 3
+22:49:58 | SudokuGame      | INFO     | Session: 3 has been updated
+22:50:15 | SudokuGame      | INFO     | Sol=
+[[2, 9, 8, 1, 3, 4, 5, 7, 6], [5, 7, 6, 2, 9, 8, 1, 4, 3], [4, 3, 1, 6, 5, 7, 2, 9, 8], [1, 4, 5, 3, 2, 9, 6, 8, 7], [6, 8, 3, 4, 7, 1, 9, 2, 5], [7, 2, 9, 5, 8, 6, 4, 3, 1], [9, 5, 2, 7, 1, 3, 8, 6, 4], [3, 1, 4, 8, 6, 2, 7, 5, 9], [8, 6, 7, 9, 4, 5, 3, 1, 2]]
+22:50:15 | database.db_manager | INFO     | Session added: 4
+22:55:03 | SudokuGame      | INFO     | Session: 4 has been updated
+22:55:24 | database.db_manager | WARNING  | Cannot Find the selected id in database
+22:55:24 | SudokuGame      | INFO     | Sol=
+[[2, 9, 8, 1, 3, 4, 5, 7, 6], [5, 7, 6, 2, 9, 8, 1, 4, 3], [4, 3, 1, 6, 5, 7, 2, 9, 8], [1, 4, 5, 3, 2, 9, 6, 8, 7], [6, 8, 3, 4, 7, 1, 9, 2, 5], [7, 2, 9, 5, 8, 6, 4, 3, 1], [9, 5, 2, 7, 1, 3, 8, 6, 4], [3, 1, 4, 8, 6, 2, 7, 5, 9], [8, 6, 7, 9, 4, 5, 3, 1, 2]]
+22:55:27 | SudokuGame      | INFO     | Saving current game...
+22:55:28 | SudokuGame      | INFO     | Saving current game...
+22:55:41 | __main__        | INFO     | Starting Game: 2026-04-20 22:55:41
+22:55:42 | Pydoku          | INFO     | Initiated Pygame
+22:55:42 | Pydoku          | INFO     | Loading Settings...
+22:55:42 | Pydoku          | INFO     | Successfuly Loaded Settings
+22:57:29 | database.db_manager | WARNING  | Cannot Find the selected id in database
+22:57:29 | SudokuGame      | INFO     | Sol=
+[[3, 1, 7, 2, 4, 6, 5, 9, 8], [9, 6, 8, 5, 1, 3, 2, 4, 7], [5, 2, 4, 7, 8, 9, 1, 6, 3], [1, 3, 2, 4, 6, 8, 9, 7, 5], [6, 7, 5, 1, 9, 2, 8, 3, 4], [4, 8, 9, 3, 7, 5, 6, 1, 2], [7, 5, 1, 9, 2, 4, 3, 8, 6], [2, 4, 6, 8, 3, 1, 7, 5, 9], [8, 9, 3, 6, 5, 7, 4, 2, 1]]
+22:57:30 | SudokuGame      | INFO     | Saving current game...
+22:57:32 | SudokuGame      | INFO     | Saving current game...
+23:01:09 | __main__        | INFO     | Starting Game: 2026-04-20 23:01:09
+23:01:09 | Pydoku          | INFO     | Initiated Pygame
+23:01:09 | Pydoku          | INFO     | Loading Settings...
+23:01:09 | Pydoku          | INFO     | Successfuly Loaded Settings
+23:01:56 | SudokuGame      | INFO     | Sol=
+[[5, 7, 8, 1, 2, 3, 4, 6, 9], [4, 2, 3, 6, 5, 9, 1, 8, 7], [1, 6, 9, 4, 8, 7, 3, 2, 5], [2, 3, 6, 7, 4, 8, 9, 5, 1], [7, 4, 5, 2, 9, 1, 8, 3, 6], [9, 8, 1, 5, 3, 6, 7, 4, 2], [8, 1, 4, 9, 6, 5, 2, 7, 3], [6, 9, 2, 3, 7, 4, 5, 1, 8], [3, 5, 7, 8, 1, 2, 6, 9, 4]]
+23:01:56 | database.db_manager | INFO     | Session added: 1
+23:03:13 | SudokuGame      | INFO     | Saving current game...
+23:03:14 | SudokuGame      | INFO     | Saving current game...
+23:03:21 | database.db_manager | WARNING  | Cannot Find the selected id in database
+23:03:21 | SudokuGame      | INFO     | Sol=
+[[5, 7, 8, 1, 2, 3, 4, 6, 9], [4, 2, 3, 6, 5, 9, 1, 8, 7], [1, 6, 9, 4, 8, 7, 3, 2, 5], [2, 3, 6, 7, 4, 8, 9, 5, 1], [7, 4, 5, 2, 9, 1, 8, 3, 6], [9, 8, 1, 5, 3, 6, 7, 4, 2], [8, 1, 4, 9, 6, 5, 2, 7, 3], [6, 9, 2, 3, 7, 4, 5, 1, 8], [3, 5, 7, 8, 1, 2, 6, 9, 4]]
+23:08:06 | SudokuGame      | INFO     | Session: 1 has been updated
+23:08:13 | SudokuGame      | INFO     | Sol=
+[[5, 1, 4, 7, 2, 3, 6, 8, 9], [2, 8, 9, 1, 4, 6, 3, 5, 7], [6, 7, 3, 8, 9, 5, 1, 2, 4], [1, 2, 6, 3, 5, 9, 4, 7, 8], [4, 5, 7, 2, 1, 8, 9, 3, 6], [3, 9, 8, 6, 7, 4, 5, 1, 2], [8, 6, 1, 9, 3, 2, 7, 4, 5], [7, 4, 2, 5, 6, 1, 8, 9, 3], [9, 3, 5, 4, 8, 7, 2, 6, 1]]
+23:08:13 | database.db_manager | INFO     | Session added: 2
+23:10:17 | __main__        | INFO     | Starting Game: 2026-04-20 23:10:17
+23:10:17 | Pydoku          | INFO     | Initiated Pygame
+23:10:17 | Pydoku          | INFO     | Loading Settings...
+23:10:17 | Pydoku          | INFO     | Successfuly Loaded Settings
+23:10:20 | SudokuGame      | INFO     | Sol=
+[[7, 5, 4, 1, 2, 6, 3, 8, 9], [9, 2, 8, 4, 3, 5, 1, 7, 6], [3, 6, 1, 8, 7, 9, 4, 2, 5], [1, 7, 5, 3, 6, 8, 2, 9, 4], [6, 3, 9, 7, 4, 2, 5, 1, 8], [4, 8, 2, 5, 9, 1, 7, 6, 3], [5, 1, 6, 2, 8, 3, 9, 4, 7], [8, 4, 3, 9, 1, 7, 6, 5, 2], [2, 9, 7, 6, 5, 4, 8, 3, 1]]
+23:10:20 | database.db_manager | INFO     | Session added: 3
+23:10:22 | Pydoku          | INFO     | Deleting Game because it is new and no one saved
+23:10:30 | SudokuGame      | INFO     | Sol=
+[[7, 9, 1, 4, 2, 3, 6, 8, 5], [5, 3, 8, 1, 6, 7, 2, 9, 4], [2, 6, 4, 5, 8, 9, 3, 7, 1], [4, 2, 7, 3, 1, 8, 9, 5, 6], [6, 5, 9, 2, 7, 4, 8, 1, 3], [8, 1, 3, 9, 5, 6, 7, 4, 2], [1, 7, 5, 8, 3, 2, 4, 6, 9], [3, 4, 6, 7, 9, 5, 1, 2, 8], [9, 8, 2, 6, 4, 1, 5, 3, 7]]
+23:10:30 | database.db_manager | INFO     | Session added: 3
+23:11:42 | SudokuGame      | INFO     | Saving current game...
+23:11:44 | SudokuGame      | INFO     | Saving current game...
+23:12:07 | database.db_manager | WARNING  | Cannot Find the selected id in database
+23:12:07 | SudokuGame      | INFO     | Sol=
+[[5, 1, 4, 7, 2, 3, 6, 8, 9], [2, 8, 9, 1, 4, 6, 3, 5, 7], [6, 7, 3, 8, 9, 5, 1, 2, 4], [1, 2, 6, 3, 5, 9, 4, 7, 8], [4, 5, 7, 2, 1, 8, 9, 3, 6], [3, 9, 8, 6, 7, 4, 5, 1, 2], [8, 6, 1, 9, 3, 2, 7, 4, 5], [7, 4, 2, 5, 6, 1, 8, 9, 3], [9, 3, 5, 4, 8, 7, 2, 6, 1]]
+23:13:07 | SudokuGame      | INFO     | Saving current game...
+23:13:12 | SudokuGame      | INFO     | Session: 2 has been updated
+23:13:45 | __main__        | INFO     | Starting Game: 2026-04-20 23:13:45
+23:13:45 | Pydoku          | INFO     | Initiated Pygame
+23:13:45 | Pydoku          | INFO     | Loading Settings...
+23:13:45 | Pydoku          | INFO     | Successfuly Loaded Settings
+23:14:47 | database.db_manager | WARNING  | Cannot Find the selected id in database
+23:14:47 | SudokuGame      | INFO     | Sol=
+[[7, 9, 1, 4, 2, 3, 6, 8, 5], [5, 3, 8, 1, 6, 7, 2, 9, 4], [2, 6, 4, 5, 8, 9, 3, 7, 1], [4, 2, 7, 3, 1, 8, 9, 5, 6], [6, 5, 9, 2, 7, 4, 8, 1, 3], [8, 1, 3, 9, 5, 6, 7, 4, 2], [1, 7, 5, 8, 3, 2, 4, 6, 9], [3, 4, 6, 7, 9, 5, 1, 2, 8], [9, 8, 2, 6, 4, 1, 5, 3, 7]]
+23:15:00 | SudokuGame      | INFO     | Session: 3 has been updated
